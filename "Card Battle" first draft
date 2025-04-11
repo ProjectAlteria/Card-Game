@@ -1,0 +1,10 @@
+#Ship Class (5656652)
+class Ship:
+    def __init__(self, name:str, points:int):#Method for ship's name, points and whether it is sunk (5656652)
+        self.name = name
+        self.points = points
+        self.sunk=False
+
+    def __repr__(self):#Method to show the status of the ship (5656652)
+        status = "Sunk" if self.sunk else "Alive"
+        return f"Ship {self.name}({self.points} points)-{status}"
