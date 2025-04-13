@@ -1,5 +1,5 @@
 An indie/student project developing a card game closely based on the 'Battleship' board game. 
-Rules: 
+- ## Rules: 
 1. The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.
 2. Cards are used as the main mechanic to interact with the grid.
 3. The two types of cards are decision cards and character cards.
