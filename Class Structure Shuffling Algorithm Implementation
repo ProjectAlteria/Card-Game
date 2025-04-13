@@ -1,0 +1,53 @@
+#Ship Class (5656652)
+class Ship:
+    def __init__(self, name:str, points:int):#Method for ship's name, points and whether it is sunk (5656652)
+        self.name = name
+        self.points = points
+        self.sunk=False
+
+    def __repr__(self):#Method to show the status of the ship (5656652)
+        status = "Sunk" if self.sunk else "Alive"
+        return f"Ship {self.name}({self.points} points)-{status}"
+
+# 5673324
+#My code builds on Ana's code
+#I am trying to visualize what the class structure would look like
+#I need to combine algorithms and data structures used in our game so I am writing this placeholder code
+from random import randint
+class Card:
+    def __init__(self, name, points):
+        self.name = name
+        self.points = points
+
+    def show(self):
+        ship_1 = Card('HMS Beagle', '19')
+        ship_2 = Card('SSS Sequioa', '20')
+        print('{}{}'.format(self.points, self.name))
+
+class Deck:
+    def __init__(self):
+        self.cards = []
+        self.build_deck()
+
+    def build_deck(self):
+        for d in ['A', 'B', 'C', 'D']: #the d stands for decision and p stands for points
+            for p in range(1, 5): #it goes from 1 to 5 because the range function is non-exclusive
+                #print('{}{}'.format(d, p))
+                self.cards.append(Card(p, d))
+
+    def show(self):
+        for c in self.cards:
+            c.show()
+
+    def shuffle(self):
+        for i in range(len(self.cards)-1, 0, -1):
+            j = randint(0, i+1)
+            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+        return self.cards
+
+deck = Deck()
+card = Card('HMS Mary','16')
+card.show()
+deck.shuffle()
+deck.show()
+#5673324 
