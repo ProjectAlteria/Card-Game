@@ -17,8 +17,8 @@ decision_cards = ['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C
 n = len(decision_cards)
 def randomize (decision_cards, n):
 # the algorithm takes the element at the end that's why we start at n-1 and swap the cards one by one
-      for i in range(n-1, 0, -1):
-          j = randint(0, i+1)
+      for i in range(n-1, 0, -1): # start at the end of the array and go up to zero, decrementing each time 
+          j = randint(0, i+1) # we take a random integer to the left of the last element for swapping 
             #here the position of the card at [i] is being swapped with [j]
           decision_cards[i], decision_cards[j] = decision_cards[j], decision_cards[i]
       return decision_cards
