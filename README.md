@@ -1,5 +1,5 @@
 ## An indie/student project developing a card game closely based on the 'Battleship' board game. 
-- ## Rules: 
+## Rules: 
 1. The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.
 2. Cards are used as the main mechanic to interact with the grid.
 3. The two types of cards are decision cards and character cards.
@@ -13,3 +13,8 @@
 11. The game ends and the total number of points collected by each is counted.
 12. The one with the highest number wins.
 13. Let the battle begin! 
+
+## Main Inspiration 
+The image attached below is our main inspiration and model for the card game called 'Sea Battle'. It is available online at: https://cardgames.io/seabattle/ 
+We have decided to use the model's two screen framwork for the player and the computer and the grid-based system (though ours is smaller). Our main mechanic is moving the cards on the board and cards only occupying single spaces on the grid as opposed to multiple as reflected in image below. 
+![Screenshot 2025-04-13 214411](https://github.com/user-attachments/assets/ba10a19e-82fd-4791-8b56-f2fbb10a64a9)
