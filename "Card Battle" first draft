@@ -8,3 +8,20 @@ class Ship:
     def __repr__(self):#Method to show the status of the ship (5656652)
         status = "Sunk" if self.sunk else "Alive"
         return f"Ship {self.name}({self.points} points)-{status}"
+#5673324
+# an implementation of the Fisher-Yates shuffling algorithm for deciding what decision cards the player is dealt
+from random import randint
+# on the 4 by 4 grid the rows are A-D and the columns are numbered 1-4
+# the decision cards for now are strings because there is no present implementation of the grid or the cards
+decision_cards = ['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4','D1', 'D2', 'D3', 'D4']
+n = len(decision_cards)
+def randomize (decision_cards, n):
+# the algorithm takes the element at the end that's why we start at n-1 and swap the cards one by one
+      for i in range(n-1, 0, -1):
+          j = randint(0, i+1)
+            #here the position of the card at [i] is being swapped with [j]
+          decision_cards[i], decision_cards[j] = decision_cards[j], decision_cards[i]
+      return decision_cards
+
+print(randomize(decision_cards,n))
+#5673324
