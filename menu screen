@@ -1,0 +1,46 @@
+#5677161
+import pygame
+import sys
+
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+clock = pygame.time.Clock()
+
+pygame.display.set_caption('Main Menu')
+
+BLACK = (0,0,0)
+
+WHITE = (200,200,200)
+
+BLUE = (173,216,230)
+
+
+def text_objects(text, font):
+    textSurface = font.render(text, True, BLACK)
+    return textSurface, textSurface.get_rect()
+
+
+def game_menu():
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(BLUE)
+        pygame.draw.rect(screen, WHITE, (400, 50, 800,200 ))
+        largeText = pygame.font.SysFont('Times New Romans', 150)
+        TextSurf, TextRect = text_objects("Naval Battle", largeText)
+        TextRect.center = (WINDOW_WIDTH/2, 150)
+        screen.blit(TextSurf, TextRect)
+        pygame.display.update()
+        clock.tick(15)
+
+game_menu()
