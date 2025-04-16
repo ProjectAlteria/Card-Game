@@ -14,14 +14,7 @@ class Card:
 class Deck:
     def __init__(self):
         self.cards = []
-        self.build_deck()
-
-    def build_deck(self):
-        for d in ['A', 'B', 'C', 'D']: #the d stands for decision and p stands for points
-            for p in range(1, 5): #it goes from 1 to 5 because the range function is non-exclusive
-                #print('{}{}'.format(d, p))
-                self.cards.append(Card(p, d))
-
+        
     def show(self):
         for c in self.cards:
             c.show()
@@ -31,6 +24,7 @@ class Deck:
             j = randint(0, i+1)
             self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
         return self.cards
+
 #5677161 #5673324
 #create instances of the 16 decision cards
 Card_1= Card('Carrier', '8')
