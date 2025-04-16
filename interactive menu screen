@@ -1,0 +1,151 @@
+#5677161
+import pygame
+import sys
+
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+clock = pygame.time.Clock()
+
+pygame.display.set_caption('Main Menu')
+
+BLACK = (0,0,0)
+
+WHITE = (255,255,255)
+
+BLUE = (173,216,230)
+
+BLUE2 = (42, 67, 148 )
+
+YELLOW = (255, 227, 132)
+
+BROWN = (121, 85, 38)
+
+GREEN = (65, 154, 80)
+
+RED = (182, 78, 67)
+
+font = pygame.font.SysFont('arialblack', 100, bold=True)
+
+font_1 = pygame.font.SysFont('arialblack', 75)
+
+objects = []
+
+
+class Button:
+    def __init__(self, x, y, width, height, buttonText='Button', onclick=None, onepress=False, normal_color = None):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.onclick = onclick
+        self.onepress = onepress
+        self.alreadypressed = False
+
+        self.fill_color = {
+            'normal' : normal_color,
+            'on' : '#000000',
+            'pressed' : '#ffffff'
+        }
+
+        self.button_surface = pygame.Surface((self.width, self.height))
+        self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self.buttonSurf = font_1.render(buttonText, True, WHITE)
+
+        objects.append(self)
+
+    def process(self):
+        mouse = pygame.mouse.get_pos()
+        self.button_surface.fill(self.fill_color['normal'])
+
+        if self.button_rect.collidepoint(mouse):
+            self.button_surface.fill(self.fill_color['on'])
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.button_surface.fill(self.fill_color['pressed'])
+                if self.onepress:
+                    self.onclick()
+                elif not self.alreadypressed:
+                    self.onclick()
+                    self.alreadypressed = True
+                else:
+                    self.alreadypressed = False
+
+        self.button_surface.blit(self.buttonSurf, [self.button_rect.width/2 - self.buttonSurf.get_rect().width/2, self.button_rect.height/2 - self.buttonSurf.get_rect().height/2])
+
+
+        screen.blit(self.button_surface, self.button_rect)
+
+
+def text_objects(text, font, text_col, x, y):
+    visual = font.render(text, True, text_col)
+    screen.blit(visual, (x,y))
+
+
+def drawGridplayer():
+    SIZE = 150  # size of the grid blocks
+    for x in range(100, 700, SIZE):
+        for y in range(150, 750, SIZE):
+            square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
+            pygame.draw.rect(screen, BLACK, square, 1)
+
+def drawGridcomputer():
+    SIZE = 150  # size of the grid blocks
+    for x in range(900, 1500, SIZE):
+        for y in range(150, 750, SIZE):
+            square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
+            pygame.draw.rect(screen, BLACK, square, 1)
+
+def game_menu():
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(BLUE2)
+        pygame.draw.rect(screen, BROWN, (400, 50, 800,200), border_radius=30)
+
+        text_objects('Naval Battle', font, YELLOW, 465, 75)
+
+
+        for obj in objects:
+            obj.process()
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+def gameloop(set):
+
+    if set == False:
+        pygame.quit()
+        sys.exit()
+    elif set == True:
+        running = True
+        while running:
+            screen.fill(BLUE)
+            drawGridplayer()
+            drawGridcomputer()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            pygame.display.update()
+            clock.tick(60)
+
+
+play_button = Button(600, 400, 400, 100, 'Play', lambda : gameloop(True), normal_color = GREEN)
+
+ex_button = Button(600, 600, 400, 100, 'Exit', lambda : gameloop(False), normal_color = RED)
+
+
+game_menu()
