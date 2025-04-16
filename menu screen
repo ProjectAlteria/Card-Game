@@ -20,10 +20,11 @@ WHITE = (200,200,200)
 
 BLUE = (173,216,230)
 
+font = pygame.font.SysFont('arialblack', 100, bold=True)
 
-def text_objects(text, font):
-    textSurface = font.render(text, True, BLACK)
-    return textSurface, textSurface.get_rect()
+def text_objects(text, font, text_col, x, y):   #changed the variables of the function to shorthen the code and to make the code reusable 5677161
+    visual = font.render(text, True, text_col)
+    screen.blit(visual, (x,y))
 
 
 def game_menu():
@@ -36,11 +37,10 @@ def game_menu():
 
         screen.fill(BLUE)
         pygame.draw.rect(screen, WHITE, (400, 50, 800,200 ))
-        largeText = pygame.font.SysFont('Times New Romans', 150)
-        TextSurf, TextRect = text_objects("Naval Battle", largeText)
-        TextRect.center = (WINDOW_WIDTH/2, 150)
-        screen.blit(TextSurf, TextRect)
+
+        text_objects('Naval Battle', font, BLACK, 465, 75)
+
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(60)
 
 game_menu()
