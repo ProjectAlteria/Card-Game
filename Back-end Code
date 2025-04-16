@@ -1,1 +1,14 @@
+# 5673324
+#My code builds on Ana's code
+#I am trying to visualize what the class structure would look like
+#I need to combine algorithms and data structures used in our game so I am writing this placeholder code
+from random import randint
+class Card:
+    def __init__(self, name, points):
+        self.name = name
+        self.points = points
 
+    def show(self):
+        ship_1 = Card('HMS Beagle', '19')
+        ship_2 = Card('SSS Sequioa', '20')
+        print('{}{}'.format(self.points, self.name))
