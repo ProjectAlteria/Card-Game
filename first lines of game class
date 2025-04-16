@@ -5,3 +5,16 @@ class Game():
         self.cards = {self.name: self.points}
         self.coordinates = ['A1', 'A2', 'A3', 'A4', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'C4', 'D1', 'D2', 'D3', 'D4']
 #5677161
+
+class Player(Game):
+    def __init__(self, name, points):
+        super().__init__(name, points)
+
+    while True:
+        def position(self):
+            player_position = input('Enter the coordinates to place the card: ')
+
+            if player_position not in self.coordinates:
+                print('Invalid coordinates, try again')
+
+#5677161
