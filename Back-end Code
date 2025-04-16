@@ -9,6 +9,53 @@ class Card:
         self.points = points
 
     def show(self):
-        ship_1 = Card('HMS Beagle', '19')
-        ship_2 = Card('SSS Sequioa', '20')
         print('{}{}'.format(self.points, self.name))
+
+class Deck:
+    def __init__(self):
+        self.cards = []
+        self.build_deck()
+
+    def build_deck(self):
+        for d in ['A', 'B', 'C', 'D']: #the d stands for decision and p stands for points
+            for p in range(1, 5): #it goes from 1 to 5 because the range function is non-exclusive
+                #print('{}{}'.format(d, p))
+                self.cards.append(Card(p, d))
+
+    def show(self):
+        for c in self.cards:
+            c.show()
+
+    def shuffle(self):
+        for i in range(len(self.cards)-1, 0, -1):
+            j = randint(0, i+1)
+            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+        return self.cards
+#5677161 #5673324
+#create instances of the 16 decision cards
+Card_1= Card('Carrier', '8')
+Card_2= Card('Submarine', '6')
+Card_3= Card('Destroyer', '4')
+Card_4= Card('Gunboat', '2')
+Card_5= Card('Cruise', '3')
+Card_6= Card('Paladin', '5')
+Card_7= Card('HMS Mary', '1')
+Card_8= Card('Banana Boat', '5')
+Card_9=Card('Carrier', '7')
+Card_10= Card('HMS Mary', '14')
+Card_11= Card('Banana Boat', '13')
+Card_12= Card('Submarine', '12')
+Card_13=Card('Destroyer', '14')
+Card_14=Card('Gunboat', '12')
+Card_15=Card('Cruise', '4')
+Card_16=Card('Paladin','7')
+#5677161 #5673324
+
+#5673324
+Cards = [Card_1, Card_2, Card_3, Card_4, Card_5, Card_6, Card_7, Card_8, Card_9, Card_10, Card_11, Card_12, Card_13, Card_14, Card_15, Card_16]
+for Card in Cards:
+    Card.show()
+deck = Deck()
+deck.shuffle()
+deck.show()
+#5673324
