@@ -1,0 +1,84 @@
+#5677161
+import sys
+import pygame
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+clock = pygame.time.Clock()
+
+font_1 = pygame.font.SysFont('Arial', 40)
+
+objects = []
+
+class Button:
+    def __init__(self, x, y, width, height, buttonText='Button', onclick=None, onepress=False ):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.onclick = onclick
+        self.onepress = onepress
+        self.alreadypressed = False
+
+        self.fill_color = {
+            'normal' : '#000000',
+            'on' : '#ffffff',
+            'pressed' : '#b03a30'
+        }
+
+        self.button_surface = pygame.Surface((self.width, self.height))
+        self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self.buttonSurf = font_1.render(buttonText, True, (200, 200, 200))
+
+        objects.append(self)
+
+    def process(self):
+        mouse = pygame.mouse.get_pos()
+        self.button_surface.fill(self.fill_color['normal'])
+
+        if self.button_rect.collidepoint(mouse):
+            self.button_surface.fill(self.fill_color['on'])
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.button_surface.fill(self.fill_color['pressed'])
+                if self.onepress:
+                    self.onclick()
+                elif not self.alreadypressed:
+                    self.onclick()
+                    self.alreadypressed = True
+                else:
+                    self.alreadypressed = False
+
+        self.button_surface.blit(self.buttonSurf, [self.button_rect.width/2 - self.buttonSurf.get_rect().width/2, self.button_rect.height/2 - self.buttonSurf.get_rect().height/2])
+
+        screen.blit(self.button_surface, self.button_rect)
+
+def gameloop(set):
+    if set == False:
+        pygame.quit()
+        sys.exit()
+    elif set == True:
+        print('YAY')
+
+
+play_button = Button(600, 400, 400, 100, 'Play', lambda : gameloop(True))
+
+ex_button = Button(600, 600, 400, 100, 'Exit', lambda : gameloop(False))
+
+while True:
+    screen.fill((20, 20, 20))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    for object in objects:
+        object.process()
+
+    pygame.display.flip()
+    clock.tick(60)
+
