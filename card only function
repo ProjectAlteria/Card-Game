@@ -1,0 +1,42 @@
+#5677161
+import pygame
+
+
+
+pygame.init()
+
+CARD_LENGHT = 150
+
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+BLUE = (173,216,230) #rgb for black 5677161
+clock = pygame.time.Clock()
+
+SCREEN_HEIGHT = 150
+SCREEN_WIDTH = 150
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+def draw_card():
+
+    for x in range(0, CARD_LENGHT):
+        for y in range(0, CARD_LENGHT):
+            card = pygame.Rect((SCREEN_WIDTH//2-CARD_LENGHT//2),(SCREEN_HEIGHT//2-CARD_LENGHT//2),CARD_LENGHT, CARD_LENGHT)
+            card_border = pygame.Rect((SCREEN_WIDTH//2-CARD_LENGHT//2),(SCREEN_HEIGHT//2-CARD_LENGHT//2),CARD_LENGHT, CARD_LENGHT)
+
+            pygame.draw.rect(screen, BLACK, card)
+            pygame.draw.rect(screen, BLUE, card_border,5)
+
+    pygame.display.update()
+    clock.tick(60)
+
+def show_card():
+    while True:
+        screen.fill(WHITE)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                    pygame.quit()
+
+            draw_card()
+
+show_card()
