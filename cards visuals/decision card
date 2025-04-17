@@ -1,0 +1,69 @@
+#5677161
+import sys
+import pygame
+
+pygame.init()
+
+clock = pygame.time.Clock()
+
+CARD_LENGTH = 150
+
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+BLUE = (173,216,230)
+RED = (182, 78, 67)
+
+SCREEN_HEIGHT = 1000
+SCREEN_WIDTH = 1000
+
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+font = pygame.font.SysFont('arialblack', 65, bold=True)
+
+cards =[]
+
+class CARD():
+    def __init__(self, x, y, width, height, color, text, text_color):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.text = text
+
+        self.card_surface = pygame.Surface((self.width, self.height))
+        self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self.cardSurf = font.render(text, True, self.text_color )
+
+        cards.append(self)
+
+
+   def show(self):
+
+        self.card_surface.fill(self.color)
+        self.card_surface.blit(self.cardSurf, [self.card_rect.width / 2 - self.cardSurf.get_rect().width / 2,
+                                                   self.card_rect.height / 2 - self.cardSurf.get_rect().height / 2])
+
+        screen.blit(self.card_surface, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
+
+card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
+
+
+def card_loop():
+    while True:
+     screen.fill(WHITE)
+
+     for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+             pygame.quit()
+             sys.exit()
+
+            for c in cards:
+                c.show()
+            pygame.display.flip()
+            clock.tick(60)
+
+card_loop()
