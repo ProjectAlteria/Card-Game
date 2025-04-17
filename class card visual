@@ -24,7 +24,7 @@ font = pygame.font.SysFont('arialblack', 65, bold=True)
 cards =[]
 
 class CARD():
-    def __init__(self, x, y, width, height, color, text):
+    def __init__(self, x, y, width, height, color, text, text_color):
         self.x = x
         self.y = y
         self.width = width
@@ -35,7 +35,7 @@ class CARD():
         self.card_surface = pygame.Surface((self.width, self.height))
         self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        self.cardSurf = font.render(text, True, RED )
+        self.cardSurf = font.render(text, True, self.text_color )
 
         cards.append(self)
 
@@ -49,7 +49,7 @@ class CARD():
         screen.blit(self.card_surface, self.card_rect)
         pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
 
-card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X')
+card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
 
 
 def card_loop():
