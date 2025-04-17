@@ -40,25 +40,32 @@ class CARD():
         cards.append(self)
 
 
-    def show(self):
+   def show(self):
+
+        self.card_surface.fill(self.color)
         self.card_surface.blit(self.cardSurf, [self.card_rect.width / 2 - self.cardSurf.get_rect().width / 2,
                                                    self.card_rect.height / 2 - self.cardSurf.get_rect().height / 2])
 
         screen.blit(self.card_surface, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
 
 card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X')
 
 
-while True:
-    screen.fill(WHITE)
+def card_loop():
+    while True:
+     screen.fill(WHITE)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+     for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+             pygame.quit()
+             sys.exit()
 
-    for c in cards:
-        c.show()
-    pygame.display.flip()
-    clock.tick(60)
+            for c in cards:
+                c.show()
+            pygame.display.flip()
+            clock.tick(60)
+
+card_loop()
+
 
