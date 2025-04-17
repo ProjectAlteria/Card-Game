@@ -1,5 +1,4 @@
-#5677161
-import sys
+#5677161import sys
 import pygame
 pygame.init()
 
@@ -12,7 +11,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-ORANGE = (247,157,21)
+DARK_BLUE = (17,65,175)
 
 font = pygame.font.SysFont('arialblack', 20)
 
@@ -44,12 +43,12 @@ class CARD():
         self.card_surface_1.fill(self.color)
         self.card_surface_2.fill(self.color)
         self.card_surface_1.blit(self.cardSurf_1, [120, 110])
-        self.card_surface_1.blit(self.cardSurf_2, [39,60])
+        self.card_surface_1.blit(self.cardSurf_2, [18,60])
 
         screen.blit(self.card_surface_1, self.card_rect)
         pygame.draw.rect(screen, WHITE, self.card_rect, 5)
 
-card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK)
+card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE)
 
 
 def card_loop():
