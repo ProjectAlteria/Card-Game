@@ -221,9 +221,8 @@ def rules_page():
                 objects.remove(button)
         game_menu()
 
-    back_button = Button(1100, 750, 400, 100, 'Back', backfunc, normal_color=BLUE)
+  back_button = Button(1300, 960, 400, 100, 'Back', backfunc, normal_color=BLUE)
     back_buttons.append(back_button)
-
     while True:
 
         screen.fill(BLUE2)
@@ -231,35 +230,35 @@ def rules_page():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        pygame.draw.rect(screen, BROWN, (550, 50, 600, 125), border_radius=30)
-        text_objects('RULES', font, YELLOW_TEXT, 675, 40)
+     pygame.draw.rect(screen, BROWN, (550, 50, 700, 175), border_radius=30)
+        text_objects('RULES', font, YELLOW_TEXT, 623, 27)
 
-        text_objects('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.',font_2,
-                     WHITE, 5, 200)
-        text_objects('2) Cards are used as the main mechanic to interact with the grid.', font_2,
-                     WHITE, 5, 250)
-        text_objects('3) The two types of cards are decision cards and character cards.', font_2,
+        text_objects('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.',font_4,
                      WHITE, 5, 300)
-        text_objects('4) The decision cards allow the player to place a bet on where the opponent ship might be on the opponent board.', font_2,
-                     WHITE, 5, 350)
-        text_objects('5) The character cards allow the player to place their own arrangement of ships on their side of the board.', font_2,
-                     WHITE, 5, 400)
-        text_objects('6) There are 16 decision cards in total (representing the 16 unique locations on the board) but the player is only dealt a hand of 7 cards.', font_2,
-                     WHITE, 5, 450)
-        text_objects('7) There are 16 character cards that are present for every playthrough for the player to place on their respective grid.', font_2,
-                     WHITE, 5, 500)
-        text_objects('8) When the game starts, the player has to guess where the opponent ships may be on the grid using the decision cards.', font_2,
-                     WHITE, 5, 550)
-        text_objects('9) The points gained are based on the type of card found by the player.', font_2,
+        text_objects('2) Cards are used as the main mechanic to interact with the grid.', font_4,
+                     WHITE, 5, 360)
+        text_objects('3) The two types of cards are decision cards and character cards.', font_4,
+                     WHITE, 5, 420)
+        text_objects('4) The decision cards allow the player to place a bet on where the opponent ship might be on the opponent board.', font_4,
+                     WHITE, 5, 480)
+        text_objects('5) The character cards allow the player to place their own arrangement of ships on their side of the board.', font_4,
+                     WHITE, 5, 540)
+        text_objects('6) There are 16 decision cards in total (representing the 16 unique locations on the board) but the player is only dealt a hand of 7 cards.', font_4,
                      WHITE, 5, 600)
-        text_objects('10) The game continues until the player and the opponent (the computer) have used up their 5 decision cards.', font_2,
-                     WHITE, 5, 650)
-        text_objects('11 The game ends and the total number of points collected by each is counted.', font_2,
-                     WHITE, 5, 700)
-        text_objects('12) The one with the highest number wins.', font_2,
-                     WHITE, 5, 750)
-        text_objects('13) Let the battle begin!', font_2,
-                     WHITE, 5, 800)
+        text_objects('7) There are 16 character cards that are present for every playthrough for the player to place on their respective grid.', font_4,
+                     WHITE, 5, 660)
+        text_objects('8) When the game starts, the player has to guess where the opponent ships may be on the grid using the decision cards.', font_4,
+                     WHITE, 5, 720)
+        text_objects('9) The points gained are based on the type of card found by the player.', font_4,
+                     WHITE, 5, 780)
+        text_objects('10) The game continues until the player and the opponent (the computer) have used up their 5 decision cards.', font_4,
+                     WHITE, 5, 840)
+        text_objects('11 The game ends and the total number of points collected by each is counted.', font_4,
+                     WHITE, 5, 900)
+        text_objects('12) The one with the highest number wins.', font_4,
+                     WHITE, 5, 960)
+        text_objects('13) Let the battle begin!', font_4,
+                     WHITE, 5, 1200)
 
         for button in back_buttons:
             button.process()
