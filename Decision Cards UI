@@ -55,7 +55,7 @@ card_5 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD
 
 run =True
 while run:
-    screen.fill('yellow')
+    screen.fill(BLUE)
     for c in cards:
         c.show()
 
