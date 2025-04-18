@@ -11,35 +11,51 @@ CARD_LENGTH = 150
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
+GREY = (144,141,143)
 BLUE = (173,216,230)
 RED = (182, 78, 67)
+ORANGE = (247,157,21)
+DARK_BLUE = (17,65,175)
+DARK_RED = (232,39,39)
+CARD_GREEN = (82,188,78)
+PURPLE = (142,56,218)
+PINK = (238,83,186)
+BANANA_YELLOW = (247,218,26)
 
-font = pygame.font.SysFont('arialblack', 65, bold=True)
+font_1 = pygame.font.SysFont('arialblack', 20)
+font_2 =  pygame.font.SysFont('arialblack', 65, bold=True)
 
 class CARD():
-    def __init__(self, x, y, width, height, color, text, text_color):
+    def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y, font):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.color = color
-        self.text = text
+        self.text_1 = text_1
+        self.text_2 = text_2
         self.text_color = text_color
+        self.text_1_x = text_1_x
+        self.text_1_y = text_1_y
+        self.text_2_x = text_2_x
+        self.text_2_y = text_2_y
+        self.font = font
 
-        self.card_surface = pygame.Surface((self.width, self.height))
+        self.card_surface_1 = pygame.Surface((self.width, self.height))
+        self.card_surface_2 = self.card_surface_1.copy()
         self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.cardSurf = font.render(text, True, self.text_color )
+        self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
+        self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
         cards.append(self)
 
-
     def show(self):
+        self.card_surface_1.fill(self.color)
+        self.card_surface_2.fill(self.color)
+        self.card_surface_1.blit(self.cardSurf_1, [self.text_1_x, self.text_1_y])
+        self.card_surface_1.blit(self.cardSurf_2, [self.text_2_x, self.text_2_y])
 
-        self.card_surface.fill(self.color)
-        self.card_surface.blit(self.cardSurf, [self.card_rect.width / 2 - self.cardSurf.get_rect().width / 2,
-                                                   self.card_rect.height / 2 - self.cardSurf.get_rect().height / 2])
-
-        screen.blit(self.card_surface, self.card_rect)
-        pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
+        screen.blit(self.card_surface_1, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5)
 
     def collidepoint(self, pos): #code that detects the collide point of the mouse and the location of the decision cards
         return self.card_rect.collidepoint(pos)
@@ -68,11 +84,24 @@ def gameloop():
         pygame.display.set_caption('Naval Battle')
         clock = pygame.time.Clock()
 
-card_1 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
-card_2 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
-card_3 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
-card_4 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
-card_5 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
+cruise_3 = CARD(10,30,CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39,60, font_1)
+cruise_4 = CARD(200,30,CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39,60, font_1)
+carrier_8 = CARD(400,30,CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK,120, 110,39,60, font_1)
+carrier_7 = CARD(600,30,CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK,120, 110,39,60, font_1)
+submarine_6 = CARD(800,30,CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110,18,60, font_1)
+submarine_12 = CARD(1000,30,CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110,18,60, font_1)
+destroyer_4 = CARD( 1200, 30,CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE,120,110,22,60, font_1)
+destroyer_14 = CARD(1400,30,CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE,110,110,22,60, font_1)
+gunboat_2 = CARD(10,230,CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110,30,60, font_1)
+gunboat_12 = CARD(200,230,CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110,30,60, font_1)
+paladin_5 = CARD(400,230,CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110,37,60, font_1)
+paladin_7 = CARD(600,230,CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110,37,60, font_1)
+HMS_mary_14 = CARD(800,230,CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE,110,110,21,60, font_1)
+HMS_mary_1 = CARD(800,230,CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE,120,110,21,60, font_1)
+banana_boat_5 = CARD(1000,230,CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK,120,110,6,60, font_1)
+banana_boat_13 = CARD(1200,230,CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 6, 60, font_1)
+decision_card = CARD(1400,230,CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '',RED, 46,30,0,0,font_2)
+
 
 run =True
 while run:
