@@ -21,6 +21,8 @@ CARD_GREEN = (82,188,78)
 PURPLE = (142,56,218)
 PINK = (238,83,186)
 BANANA_YELLOW = (247,218,26)
+GREEN_DECK = (10,141,41)
+
 
 font_1 = pygame.font.SysFont('arialblack', 20)
 font_2 =  pygame.font.SysFont('arialblack', 65, bold=True)
@@ -66,14 +68,14 @@ class CARD():
 def drawGridplayer():
         SIZE = 150  # size of the grid blocks
         for x in range(100, 700, SIZE):
-            for y in range(150, 750, SIZE):
+            for y in range(100, 700, SIZE):
                 square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
                 pygame.draw.rect(screen, BLACK, square, 1)
 
 def drawGridcomputer():
         SIZE = 150  # size of the grid blocks
         for x in range(900, 1500, SIZE):
-            for y in range(150, 750, SIZE):
+            for y in range(100, 700, SIZE):
                 square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
                 pygame.draw.rect(screen, BLACK, square, 1)
 
@@ -106,6 +108,7 @@ decision_card = CARD(1400,230,CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '',RED, 46,3
 run =True
 while run:
     screen.fill(BLUE)
+    pygame.draw.rect(screen, GREEN_DECK, (252, 725, 1100, 175))
     drawGridplayer()
     drawGridcomputer()
 
