@@ -8,6 +8,7 @@ WINDOW_WIDTH = 1600
 #color that are going to be used 5677161
 BLUE = (173,216,230) #rgb for black 5677161
 BLACK = (0,0,0) #rgb for blue 5677161
+GREEN = (56,166,82)
 
 #setting screen color 5677161
 screen_color = BLUE
@@ -17,14 +18,14 @@ screen_color = BLUE
 def drawGridplayer():
     SIZE = 150  # size of the grid blocks
     for x in range(100, 700, SIZE):
-        for y in range(150, 750, SIZE):
+        for y in range(100, 700, SIZE):
             square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
             pygame.draw.rect(screen, BLACK, square, 1)
 
 def drawGridcomputer():
     SIZE = 150  # size of the grid blocks
     for x in range(900, 1500, SIZE):
-        for y in range(150, 750, SIZE):
+        for y in range(100, 700, SIZE):
             square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
             pygame.draw.rect(screen, BLACK, square, 1)
 
@@ -39,6 +40,7 @@ def gameloop():
 
     while True:
         screen.fill(screen_color)
+        pygame.draw.rect(screen, GREEN , (400, 725, 800, 175))
         drawGridplayer()
         drawGridcomputer()
 
