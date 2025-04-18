@@ -93,15 +93,15 @@ def text_objects(text, font, text_col, x, y):
 
 def drawGridplayer():
     SIZE = 150  # size of the grid blocks
-    for x in range(100, 700, SIZE):
-        for y in range(150, 750, SIZE):
+    for x in range(115, 715, SIZE):
+        for y in range(200, 800, SIZE):
             square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
             pygame.draw.rect(screen, BLACK, square, 1)
 
 def drawGridcomputer():
     SIZE = 150  # size of the grid blocks
-    for x in range(900, 1500, SIZE):
-        for y in range(150, 750, SIZE):
+    for x in range(1000, 1600, SIZE):
+        for y in range(200, 800, SIZE):
             square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
             pygame.draw.rect(screen, BLACK, square, 1)
 
