@@ -1,23 +1,19 @@
 #5677161
 import sys
 import pygame
-
 pygame.init()
 
 clock = pygame.time.Clock()
 
 CARD_LENGTH = 150
+SCREEN_HEIGHT = 150
+SCREEN_WIDTH = 150
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 BLUE = (173,216,230)
 RED = (182, 78, 67)
-
-SCREEN_HEIGHT = 1000
-SCREEN_WIDTH = 1000
-
-
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 font = pygame.font.SysFont('arialblack', 65, bold=True)
 
@@ -31,16 +27,15 @@ class CARD():
         self.height = height
         self.color = color
         self.text = text
+        self.text_color = text_color
 
         self.card_surface = pygame.Surface((self.width, self.height))
         self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-
         self.cardSurf = font.render(text, True, self.text_color )
-
         cards.append(self)
 
 
-   def show(self):
+    def show(self):
 
         self.card_surface.fill(self.color)
         self.card_surface.blit(self.cardSurf, [self.card_rect.width / 2 - self.cardSurf.get_rect().width / 2,
