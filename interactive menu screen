@@ -1,4 +1,5 @@
 #5677161
+
 import pygame
 import sys
 
@@ -8,7 +9,7 @@ pygame.init()
 WINDOW_HEIGHT = 900
 WINDOW_WIDTH = 1600
 
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT),pygame.FULLSCREEN)
 
 clock = pygame.time.Clock()
 
@@ -32,7 +33,7 @@ RED = (182, 78, 67)
 
 ORANGE = (247,157,21)
 
-font = pygame.font.SysFont('arialblack', 100, bold=True)
+font = pygame.font.SysFont('arialblack', 150, bold=True)
 
 font_1 = pygame.font.SysFont('arialblack', 75)
 
@@ -113,9 +114,9 @@ def game_menu():
                 sys.exit()
 
         screen.fill(BLUE2)
-        pygame.draw.rect(screen, BROWN, (400, 50, 800,200), border_radius=30)
+        pygame.draw.rect(screen, BROWN, (280, 70, 1200,250), border_radius=30)
 
-        text_objects('Naval Battle', font, YELLOW, 465, 75)
+        text_objects('Naval Battle', font, YELLOW, 375, 80)
 
 
         for obj in objects:
@@ -127,6 +128,9 @@ def game_menu():
 
 def gameloop(set):
 
+    exit_x = []
+    x_button = Button(1615, 0, 100, 100, 'X', lambda: gameloop(False), normal_color=RED)
+    exit_x.append(x_button)
     if set == False:
         pygame.quit()
         sys.exit()
@@ -134,6 +138,8 @@ def gameloop(set):
         running = True
         while running:
             screen.fill(BLUE)
+            for x in exit_x:
+                x.process()
             drawGridplayer()
             drawGridcomputer()
 
@@ -206,11 +212,13 @@ def rules_page():
 
 
 
-play_button = Button(600, 350, 400, 100, 'Play', lambda : gameloop(True), normal_color = GREEN)
+play_button = Button(550, 500, 600, 150, 'Play', lambda : gameloop(True), normal_color = GREEN)
 
-ex_button = Button(600, 650, 400, 100, 'Exit', lambda : gameloop(False), normal_color = RED)
+rules_button = Button(550, 700, 600, 150, 'Rules', rules_page, normal_color = ORANGE)
 
-rules_button = Button(600, 500, 400, 100, 'Rules', rules_page, normal_color = ORANGE)
+ex_button = Button(550, 900, 600, 150, 'Exit', lambda : gameloop(False), normal_color = RED)
+
+
 
 
 
