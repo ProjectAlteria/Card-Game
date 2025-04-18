@@ -41,6 +41,12 @@ class CARD():
         screen.blit(self.card_surface, self.card_rect)
         pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
 
+    def collidepoint(self, pos): #code that detects the collide point of the mouse and the location of the decision cards
+        return self.card_rect.collidepoint(pos)
+
+    def move_ip(self, rel):
+        self.card_rect.move_ip(rel)
+
 card_1 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
 
 run =True
