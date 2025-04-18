@@ -3,7 +3,7 @@ import sys
 import pygame
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((1240, 720))
+screen = pygame.display.set_mode((1600, 900))
 pygame.display.set_caption('Naval Battle Drag and Drop')
 active_cards = None
 cards = []
@@ -47,6 +47,27 @@ class CARD():
     def move_ip(self, rel):
         self.card_rect.move_ip(rel)
 
+def drawGridplayer():
+        SIZE = 150  # size of the grid blocks
+        for x in range(100, 700, SIZE):
+            for y in range(150, 750, SIZE):
+                square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
+                pygame.draw.rect(screen, BLACK, square, 1)
+
+def drawGridcomputer():
+        SIZE = 150  # size of the grid blocks
+        for x in range(900, 1500, SIZE):
+            for y in range(150, 750, SIZE):
+                square = pygame.Rect(x, y, SIZE, SIZE)  # measures for the grid 5677161
+                pygame.draw.rect(screen, BLACK, square, 1)
+
+def gameloop():
+        global screen, clock  # to make variables accessible throughout the whole code 5677161
+        pygame.init()
+        screen = pygame.display.set_mode((1600, 900))  # defining size of the screen 5677161
+        pygame.display.set_caption('Naval Battle')
+        clock = pygame.time.Clock()
+
 card_1 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
 card_2 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
 card_3 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
@@ -56,6 +77,9 @@ card_5 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD
 run =True
 while run:
     screen.fill(BLUE)
+    drawGridplayer()
+    drawGridcomputer()
+
     for c in cards:
         c.show()
 
