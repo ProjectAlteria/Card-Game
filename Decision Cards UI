@@ -1,0 +1,73 @@
+#5673324 #5677161
+import sys
+import pygame
+pygame.init()
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((1240, 720))
+pygame.display.set_caption('Naval Battle Drag and Drop')
+active_cards = None
+cards = []
+CARD_LENGTH = 150
+
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+BLUE = (173,216,230)
+RED = (182, 78, 67)
+
+font = pygame.font.SysFont('arialblack', 65, bold=True)
+
+class CARD():
+    def __init__(self, x, y, width, height, color, text, text_color):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.text = text
+        self.text_color = text_color
+
+        self.card_surface = pygame.Surface((self.width, self.height))
+        self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.cardSurf = font.render(text, True, self.text_color )
+        cards.append(self)
+
+
+    def show(self):
+
+        self.card_surface.fill(self.color)
+        self.card_surface.blit(self.cardSurf, [self.card_rect.width / 2 - self.cardSurf.get_rect().width / 2,
+                                                   self.card_rect.height / 2 - self.cardSurf.get_rect().height / 2])
+
+        screen.blit(self.card_surface, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5 )
+
+card_1 = CARD((1240//2-CARD_LENGTH//2),(720//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', RED)
+
+run =True
+while run:
+    screen.fill('yellow')
+    for c in cards:
+        c.show()
+
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                for num, c in enumerate(cards):
+                    if c.collidepoint(event.pos):
+                        active_cards = num
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                active_cards = None
+
+        if event.type == pygame.MOUSEMOTION:
+            if active_cards != None:
+                cards[active_cards].move_ip(event.rel)
+
+        if event.type == pygame.QUIT:
+            run = False
+
+    pygame.display.flip()
+
+pygame.quit()
+#5673324 #5677161
