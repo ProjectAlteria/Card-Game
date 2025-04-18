@@ -30,9 +30,13 @@ GREEN = (65, 154, 80)
 
 RED = (182, 78, 67)
 
+ORANGE = (247,157,21)
+
 font = pygame.font.SysFont('arialblack', 100, bold=True)
 
 font_1 = pygame.font.SysFont('arialblack', 75)
+
+font_2 = pygame.font.SysFont('arialblack', 20)
 
 objects = []
 
@@ -73,7 +77,6 @@ class Button:
                 elif not self.alreadypressed:
                     self.onclick()
                     self.alreadypressed = True
-                else:
                     self.alreadypressed = False
 
         self.button_surface.blit(self.buttonSurf, [self.button_rect.width/2 - self.buttonSurf.get_rect().width/2, self.button_rect.height/2 - self.buttonSurf.get_rect().height/2])
@@ -141,6 +144,7 @@ def gameloop(set):
 
             pygame.display.update()
             clock.tick(60)
+
 def rules_page():
 
     back_buttons = []
@@ -199,10 +203,16 @@ def rules_page():
         clock.tick(60)
 
 
-play_button = Button(600, 400, 400, 100, 'Play', lambda : gameloop(True), normal_color = GREEN)
 
-ex_button = Button(600, 600, 400, 100, 'Exit', lambda : gameloop(False), normal_color = RED)
+
+
+play_button = Button(600, 350, 400, 100, 'Play', lambda : gameloop(True), normal_color = GREEN)
+
+ex_button = Button(600, 650, 400, 100, 'Exit', lambda : gameloop(False), normal_color = RED)
 
 rules_button = Button(600, 500, 400, 100, 'Rules', rules_page, normal_color = ORANGE)
+
+
+
 
 game_menu()
