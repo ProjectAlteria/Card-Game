@@ -20,7 +20,7 @@ font = pygame.font.SysFont('arialblack', 65, bold=True)
 cards =[]
 
 class CARD():
-    def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y):
+    def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y, font):
         self.x = x
         self.y = y
         self.width = width
@@ -33,12 +33,13 @@ class CARD():
         self.text_1_y = text_1_y
         self.text_2_x = text_2_x
         self.text_2_y = text_2_y
+        self.font = font
 
         self.card_surface_1 = pygame.Surface((self.width, self.height))
         self.card_surface_2 = self.card_surface_1.copy()
         self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.cardSurf_1 = font.render(text_1, True, self.text_color)
-        self.cardSurf_2 = font.render(text_2, True, self.text_color)
+        self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
+        self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
         cards.append(self)
 
     def show(self):
@@ -50,7 +51,7 @@ class CARD():
         screen.blit(self.card_surface_1, self.card_rect)
         pygame.draw.rect(screen, WHITE, self.card_rect, 5)
 
-card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '',RED, 46,30,0,0,)
+card_1 = CARD((SCREEN_WIDTH//2-CARD_LENGTH//2),(SCREEN_HEIGHT//2-CARD_LENGTH//2),CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '',RED, 46,30,0,0,font_1)
 
 
 def card_loop():
