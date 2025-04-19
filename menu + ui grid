@@ -186,7 +186,7 @@ def gameloop(set):
 
             for c in cards:
                 c.show()
-
+#5673324
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -201,7 +201,7 @@ def gameloop(set):
                 if event.type == pygame.MOUSEMOTION:
                     if active_cards != None:
                         cards[active_cards].move_ip(event.rel)
-
+#5673324
             x_button = Button(1615, 0, 100, 100, 'X', lambda: gameloop(False), normal_color=RED)
             exit_x.append(x_button)
 
