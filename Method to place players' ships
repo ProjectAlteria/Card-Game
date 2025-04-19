@@ -3,7 +3,7 @@ def Place_ships:
     #next line isnt definitive, im trying to fit in the dictionary 
     print("You can choose any ship from {the card dictionary}")
     ship_location = input("Pick a square for your ship")
-    if board[row][col] ==" ":
+    if grid[row][col] ==" ":
         board[row][col] = ship_location
     else:
         print("Sorry, you can't play this ship here, it's already taken")
