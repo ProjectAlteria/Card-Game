@@ -1,8 +1,0 @@
-#5677161
-cards_type = {
-    'Carrier' : 8,
-    'Submarine' : 6,
-    'Destroyer' : 4,
-	'Gunboat': 2,
-    'Cruise': 1, 
-}
