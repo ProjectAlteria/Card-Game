@@ -45,11 +45,13 @@ objects = []
 
 
 class Button:
-    def __init__(self, x, y, width, height, buttonText='Button', onclick=None, onepress=False, normal_color = None):
+    def __init__(self, x, y, width, height,font_text,color_text, buttonText='Button', onclick=None, onepress=False, normal_color = None):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.font_text = font_text
+        self.color_text = color_text
         self.onclick = onclick
         self.onepress = onepress
         self.alreadypressed = False
@@ -63,7 +65,7 @@ class Button:
         self.button_surface = pygame.Surface((self.width, self.height))
         self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        self.buttonSurf = font_1.render(buttonText, True, WHITE)
+        self.buttonSurf = self.font_text.render(buttonText, True, self.color_text)
 
         objects.append(self)
 
@@ -176,7 +178,7 @@ def gameloop(set):
         running = True
         while running:
             screen.fill(BLUE)
-            x_button = Button(1615, 0, 100, 100, 'X', lambda: gameloop(False), normal_color=RED)
+            x_button = Button(1615, 0, 100, 100, font_1, WHITE,'X', lambda: gameloop(False), normal_color=RED)
             exit_x.append(x_button)
             for x in exit_x:
                 x.process()
@@ -202,7 +204,7 @@ def gameloop(set):
                     if active_cards != None:
                         cards[active_cards].move_ip(event.rel)
 #5673324
-            x_button = Button(1615, 0, 100, 100, 'X', lambda: gameloop(False), normal_color=RED)
+            x_button = Button(1615, 0, 100, 100, font_1,WHITE,'X', lambda: gameloop(False), normal_color=RED)
             exit_x.append(x_button)
 
             pygame.display.flip()
@@ -221,7 +223,7 @@ def rules_page():
                 objects.remove(button)
         game_menu()
 
-  back_button = Button(1300, 960, 400, 100, 'Back', backfunc, normal_color=BLUE)
+    back_button = Button(1300, 960, 400, 100, font_1, WHITE,'Back', backfunc, normal_color=BLUE)
     back_buttons.append(back_button)
     while True:
 
@@ -268,9 +270,9 @@ def rules_page():
 
 
 
-play_button = Button(550, 500, 600, 150, 'Play', lambda : gameloop(True), normal_color = GREEN_BUTTON)
-rules_button = Button(550, 700, 600, 150, 'Rules', rules_page, normal_color = ORANGE_BUTTON)
-ex_button = Button(550, 900, 600, 150, 'Exit', lambda : gameloop(False), normal_color = RED_BUTTON)
+play_button = Button(550, 500, 600, 150, font_1,WHITE,'Play', lambda : gameloop(True), normal_color = GREEN_BUTTON)
+rules_button = Button(550, 700, 600, 150, font_1,WHITE,'Rules', rules_page, normal_color = ORANGE_BUTTON)
+ex_button = Button(550, 900, 600, 150, font_1,WHITE,'Exit', lambda : gameloop(False), normal_color = RED_BUTTON)
 
 cruise_3 = CARD(10,30,CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39,60, font_2)
 cruise_4 = CARD(200,30,CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39,60, font_2)
