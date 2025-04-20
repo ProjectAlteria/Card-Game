@@ -86,9 +86,17 @@ class Button:
 
         screen.blit(self.button_surface, self.button_rect)
 
-def text_objects(text, font, text_col, x, y):
-    visual = font.render(text, True, text_col)
-    screen.blit(visual, (x,y))
+class TEXT():
+    def __init__(self, text, font, text_color,x,y):
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.x = x
+        self.y = y
+
+    def text_objects(self):
+        visual = self.font.render(self.text, True, self.text_color)
+        screen.blit(visual, (self.x,self.y))
 
 
 def gameloop(set):
@@ -126,10 +134,15 @@ while True:
     pygame.draw.rect(screen, BROWN, (500,150, 600, 600))
     pygame.draw.rect(screen, BLACK, (500, 150, 600, 600), 4)
 
-    text_objects("SCORE BOARD", font_1, YELLOW_TEXT,520,180 )
-    text_objects("Player score:", font_2, YELLOW_TEXT,520,300 )
-    text_objects('Computer score:', font_2, YELLOW_TEXT,520,390 )
-    text_objects('The winner is:', font_2, YELLOW_TEXT,590,490 )
+    board_title = TEXT("SCORE BOARD", font_1, YELLOW_TEXT,520,180 )
+    player_score = TEXT("Player score:", font_2, YELLOW_TEXT,520,300 )
+    computer_score = TEXT('Computer score:', font_2, YELLOW_TEXT,520,390 )
+    winner = TEXT('The winner is:', font_2, YELLOW_TEXT,590,490 )
+
+    texts = [board_title, player_score, computer_score, winner]
+
+    for t in texts:
+        t.text_objects()
 
     play_button = Button(550, 660, 200, 70, font_3,WHITE,'Restart', lambda: gameloop(True), normal_color=BLUE2)
     buttons.append(play_button)
