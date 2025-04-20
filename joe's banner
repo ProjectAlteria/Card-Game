@@ -1,0 +1,158 @@
+#5677161
+import pygame
+import sys
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+font_2 =  pygame.font.SysFont('arialblack', 50, bold=True)
+
+WHITE = (255, 255, 255)
+RED_BUTTON = (182, 78, 67)
+GREY = (144, 141, 143)
+BLACK = (0,0,0)
+BLUE = (173,216,230)
+BLUE2 = (42, 67, 148 )
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+clock = pygame.time.Clock()
+
+objects = []
+
+class GRID():
+    def __init__(self, size_blocks, x_upper_range, x_lower_range, y_upper_range, y_lower_range, color):
+        self.size_blocks = size_blocks
+        self.x_upper_range = x_upper_range
+        self.x_lower_range = x_lower_range
+        self.y_upper_range = y_upper_range
+        self.y_lower_range = y_lower_range
+        self.color = color
+
+    def draw(self):
+
+        for x in range(self.x_upper_range, self.x_lower_range, self.size_blocks):
+            for y in range(self.y_upper_range, self.y_lower_range, self.size_blocks):
+                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
+                pygame.draw.rect(screen, self.color, square, 1)
+
+players_grid = GRID(150, 115, 715, 200, 800, BLACK)
+computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
+
+
+class Button:
+    def __init__(self, x, y, width, height,font_text, color_text, buttonText='Button',  onclick=None, onepress=False, normal_color = None):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.onclick = onclick
+        self.onepress = onepress
+        self.alreadypressed = False
+        self.font_text = font_text
+        self.color_text = color_text
+
+        self.fill_color = {
+            'normal' : normal_color,
+            'on' : '#000000',
+            'pressed' : '#ffffff'
+        }
+
+        self.button_surface = pygame.Surface((self.width, self.height))
+        self.button_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self.buttonSurf = self.font_text.render(buttonText, True, self.color_text)
+
+        objects.append(self)
+
+    def process(self):
+        mouse = pygame.mouse.get_pos()
+        self.button_surface.fill(self.fill_color['normal'])
+
+        if self.button_rect.collidepoint(mouse):
+            self.button_surface.fill(self.fill_color['on'])
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.button_surface.fill(self.fill_color['pressed'])
+                if self.onepress:
+                    self.onclick()
+                elif not self.alreadypressed:
+                    self.onclick()
+                    self.alreadypressed = True
+                    self.alreadypressed = False
+
+        self.button_surface.blit(self.buttonSurf, [self.button_rect.width/2 - self.buttonSurf.get_rect().width/2, self.button_rect.height/2 - self.buttonSurf.get_rect().height/2])
+
+
+        screen.blit(self.button_surface, self.button_rect)
+
+class TEXT():
+    def __init__(self, text, font, text_color,x,y):
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.x = x
+        self.y = y
+
+    def text_objects(self):
+        visual = self.font.render(self.text, True, self.text_color)
+        screen.blit(visual, (self.x,self.y))
+
+class TEXT():
+    def __init__(self, text, font, text_color,x,y):
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.x = x
+        self.y = y
+
+    def text_objects(self):
+        visual = self.font.render(self.text, True, self.text_color)
+        screen.blit(visual, (self.x,self.y))
+
+text_breaking = TEXT('Joe, stop trying to break our game',font_2,BLUE2,325,270 )
+
+
+def gameloop(set):
+    grids = [players_grid, computers_grid]
+
+    if set == False:
+        pygame.quit()
+        sys.exit()
+    elif set == True:
+        running = True
+        while running:
+            screen.fill(BLUE)
+            for g in grids:
+                g.draw()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            pygame.display.update()
+            clock.tick(60)
+
+while True:
+
+    buttons = []
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    screen.fill(BLUE)
+
+    pygame.draw.rect(screen, GREY, (300, 150, 1000, 300))
+    pygame.draw.rect(screen, BLACK, (300, 150, 1000, 300), 4)
+
+    text_breaking.text_objects()
+
+    x_button = Button(1220, 150, 80, 80, font_2, WHITE, 'X', lambda: gameloop(False), normal_color=RED_BUTTON)
+    x_button.process()
+
+    pygame.display.update()
+    clock.tick(60)
