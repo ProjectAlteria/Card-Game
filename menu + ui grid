@@ -164,7 +164,7 @@ class TEXT():
         visual = self.font.render(self.text, True, self.text_color)
         screen.blit(visual, (self.x,self.y))
 
-title = TEXT('Naval Battle', font, BLACK, 465, 75)
+title = TEXT('Naval Battle', font, YELLOW_TEXT, 390, 75)
 
 
 def game_menu():
