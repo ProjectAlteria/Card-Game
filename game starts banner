@@ -1,3 +1,66 @@
+import pygame
+import sys
+
+
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+clock = pygame.time.Clock()
+
+start_time = pygame.time.get_ticks()
+duration = 2000
+
+BROWN = (121, 85, 38)
+BLUE = (173,216,230)
+BLACK = (0,0,0)
+YELLOW_TEXT = (255, 227, 132)
+WHITE = (255,255,255)
+RED = (182, 78, 67)
+BLUE2 = (42, 67, 148 )
+
+font = pygame.font.SysFont('arialblack', 100, bold=True)
+
+
+class Message():
+    def __init__(self,x,y,width,height,rect_color,text,font,text_color,border_color,border_radius,thickness):
+        self.rectangle = pygame.Rect(x,y,width,height)
+        self.text = text
+        self.font = font
+        self.rect_color = rect_color
+        self.text_color = text_color
+        self.border_color = border_color
+        self.border_radius = border_radius
+        self.thickness = thickness
+
+    def drawBox(self):
+        pygame.draw.rect(screen,self.rect_color,self.rectangle,border_radius=self.border_radius)
+        pygame.draw.rect(screen,self.border_color,self.rectangle,self.thickness,border_radius=self.border_radius)
+
+        text_visual = self.font.render(self.text,True,self.text_color)
+        text_visual_rect = text_visual.get_rect(center=self.rectangle.center)
+        screen.blit(text_visual,text_visual_rect)
+
+
+game_text = Message(300, 300, 1000, 200,BLUE2,'GAME STARTS',font,WHITE,BLACK,30,4)
+
+while True:
+    current_time = pygame.time.get_ticks()
+    elapsed_time = current_time - start_time
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+    screen.fill(BLUE)
+    if elapsed_time < duration:
+        game_text.drawBox()
+        
+    pygame.display.update()
+    clock.tick(60)
 #5677161
 import pygame
 import sys
