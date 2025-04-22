@@ -206,14 +206,15 @@ text_3c= TEXT('3', font_3, BLACK,1350,120 )
 text_4c= TEXT('4', font_3, BLACK,1500,120 )
 
 def gameloop(set):
+    global active_cards
     exit_x = []
     grids = [players_grid, computers_grid]
     coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
                          text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
-    if set == False:
+    if not set:
         pygame.quit()
         sys.exit()
-    elif set == True:
+    elif set:
         running = True
         while running:
             current_time = pygame.time.get_ticks()
@@ -254,7 +255,7 @@ def gameloop(set):
                         active_cards = None
 
                 if event.type == pygame.MOUSEMOTION:
-                    if active_cards != None:
+                    if active_cards is not None:
                         cards[active_cards].move_ip(event.rel)
             # 5673324
             x_button = Button(1615, 0, 100, 100, font_1, WHITE, 'X', lambda: gameloop(False), normal_color=RED)
@@ -294,7 +295,7 @@ def rules_page():
         rule4 = TEXT('4) The decision cards allow the player to place a bet on where the opponent ship might be on the opponent board.',font_2,WHITE, 5, 480)
         rule5 = TEXT('5) The character cards allow the player to place their own arrangement of ships on their side of the board.',font_2,WHITE, 5, 540)
         rule6  = TEXT('6) There are 16 decision cards in total (representing the 16 unique locations on the board) but the player is only dealt a hand of 7 cards.',font_2,WHITE, 5, 600)
-        rule7 = TEXT('7) There are 16 character cards that are present for every playthrough for the player to place on their respective grid.',font_2,WHITE, 5, 660)
+        rule7 = TEXT('7) There are 16 character cards that are present for every play through for the player to place on their respective grid.',font_2,WHITE, 5, 660)
         rule8 = TEXT('8) When the game starts, the player has to guess where the opponent ships may be on the grid using the decision cards.',font_2,WHITE, 5, 720)
         rule9 = TEXT('9) The points gained are based on the type of card found by the player.', font_2, WHITE, 5, 780)
         rule10 = TEXT('10) The game continues until the player and the opponent (the computer) have used up their 5 decision cards.',font_2,WHITE, 5, 840)
