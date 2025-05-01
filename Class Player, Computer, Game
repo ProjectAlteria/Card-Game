@@ -1,0 +1,370 @@
+#5673749 - Fixing the Grid
+
+import random
+import pygame
+#the original GRID class but tweaked a bit
+class GRID:
+    def __init__(self, size_blocks, x_upper_range, x_lower_range, y_upper_range, y_lower_range, color):
+        self.size_blocks = size_blocks
+        self.x_upper_range = x_upper_range
+        self.x_lower_range = x_lower_range
+        self.y_upper_range = y_upper_range
+        self.y_lower_range = y_lower_range
+        self.color = color
+
+        # Game-specific grid
+        self.player_grid = [["" for _ in range(4)] for _ in range(4)]
+        self.computer_grid = [["" for _ in range(4)] for _ in range(4)]
+        self.player_card_options = ['ship 1', 'ship 2', 'ship 3', 'ship 4']
+        self.coord_options = ['A1', 'A2', 'A3', 'A4',
+                              'B1', 'B2', 'B3', 'B4',
+                              'C1', 'C2', 'C3', 'C4',
+                              'D1', 'D2', 'D3', 'D4']
+
+    def coord_to_index(self, coord):
+        row_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+        return row_map[coord[0].upper()], int(coord[1]) - 1
+
+    def display_grid(self, grid, title="Grid"):
+        print(f"\n{title}")
+        print("    1   2   3   4")
+        print("  +---+---+---+---+")
+        row_labels = ['A', 'B', 'C', 'D']
+        for i in range(len(grid)):
+            row_display = f"{row_labels[i]} |"
+            for j in range(len(grid[i])):
+                if title == "Enemy Grid" and grid[i][j] == "S":
+                    cell = " "  # hide enemy ships
+                else:
+                    cell = grid[i][j] if grid[i][j] != "" else " "
+                row_display += f"{cell:^3}|"
+            print(row_display)
+            print("  +---+---+---+---+")
+        # 5673749 ends here
+
+# Naval Battle Drag and Drop Game
+# Combined by 5673324 and 5677161 on 18th April 2025
+# Mouse interaction (5673324) + Decision Cards (5677161)
+# Sara later added class structure for character cards
+
+import sys
+import pygame
+import random
+
+pygame.init()
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((1600, 900))
+pygame.display.set_caption('Naval Battle Drag and Drop')
+
+active_cards = None
+cards = []
+CARD_LENGTH = 150
+
+# Colors
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+GREY = (144,141,143)
+BLUE = (173,216,230)
+RED = (182, 78, 67)
+ORANGE = (247,157,21)
+DARK_BLUE = (17,65,175)
+DARK_RED = (232,39,39)
+CARD_GREEN = (82,188,78)
+PURPLE = (142,56,218)
+PINK = (238,83,186)
+BANANA_YELLOW = (247,218,26)
+GREEN_DECK = (10,141,41)
+
+# Fonts
+font_1 = pygame.font.SysFont('arialblack', 20)
+font_2 =  pygame.font.SysFont('arialblack', 65, bold=True)
+
+class CARD():
+    def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y, font):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.text_1 = text_1
+        self.text_2 = text_2
+        self.text_color = text_color
+        self.text_1_x = text_1_x
+        self.text_1_y = text_1_y
+        self.text_2_x = text_2_x
+        self.text_2_y = text_2_y
+        self.font = font
+
+        self.card_surface_1 = pygame.Surface((self.width, self.height))
+        self.card_surface_2 = self.card_surface_1.copy()
+        self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
+        self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
+        cards.append(self)
+
+    def show(self):
+        self.card_surface_1.fill(self.color)
+        self.card_surface_2.fill(self.color)
+        self.card_surface_1.blit(self.cardSurf_1, [self.text_1_x, self.text_1_y])
+        self.card_surface_1.blit(self.cardSurf_2, [self.text_2_x, self.text_2_y])
+        screen.blit(self.card_surface_1, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5)
+
+    def collidepoint(self, pos):
+        return self.card_rect.collidepoint(pos)
+
+    def move_ip(self, rel):
+        self.card_rect.move_ip(rel)
+
+def drawGridplayer():
+    SIZE = 150
+    for x in range(100, 700, SIZE):
+        for y in range(100, 700, SIZE):
+            square = pygame.Rect(x, y, SIZE, SIZE)
+            pygame.draw.rect(screen, BLACK, square, 1)
+
+def drawGridcomputer():
+    SIZE = 150
+    for x in range(900, 1500, SIZE):
+        for y in range(100, 700, SIZE):
+            square = pygame.Rect(x, y, SIZE, SIZE)
+            pygame.draw.rect(screen, BLACK, square, 1)
+
+def gameloop():
+    global screen, clock
+    pygame.init()
+    screen = pygame.display.set_mode((1600, 900))
+    pygame.display.set_caption('Naval Battle')
+    clock = pygame.time.Clock()
+
+# Create cards
+CARD(10,30,CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39,60, font_1)
+CARD(200,30,CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39,60, font_1)
+CARD(400,30,CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK,120, 110,39,60, font_1)
+CARD(600,30,CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK,120, 110,39,60, font_1)
+CARD(800,30,CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110,18,60, font_1)
+CARD(1000,30,CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110,18,60, font_1)
+CARD(1200, 30,CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE,120,110,22,60, font_1)
+CARD(1400,30,CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE,110,110,22,60, font_1)
+CARD(10,230,CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110,30,60, font_1)
+CARD(200,230,CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110,30,60, font_1)
+CARD(400,230,CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110,37,60, font_1)
+CARD(600,230,CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110,37,60, font_1)
+CARD(800,230,CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE,110,110,21,60, font_1)  # One HMS Mary only
+CARD(1000,230,CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK,120,110,6,60, font_1)
+CARD(1200,230,CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 6, 60, font_1)
+CARD(1400,230,CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46,30,0,0,font_2)  # Decision card
+
+#5673324
+def shuffle(cards):
+    shuffle_targets = [(random.randint(50, 700), random.randint(50, 500)) for _ in cards]
+    for step in range(20):
+        for i, card in enumerate(cards):
+            dx = (shuffle_targets[i][0] - card.x) // (20 - step)
+            dy = (shuffle_targets[i][1] - card.y) // (20 - step)
+            card.x += dx
+            card.y += dy
+            card.card_rect.topleft = (card.x, card.y)
+#5673324
+run = True
+while run:
+    #5656652
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+            break  #exit the event loop immediately
+    if not run:
+        break  #exit main loop before any rendering
+    #5656652-end
+    screen.fill(BLUE)
+    pygame.draw.rect(screen, GREEN_DECK, (252, 725, 1100, 175))
+    drawGridplayer()
+    drawGridcomputer()
+
+    for c in cards:
+        c.show()
+
+    pygame.display.update()
+    pygame.time.delay(30)
+
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                for num, c in enumerate(cards):
+                    if c.collidepoint(event.pos):
+                        active_cards = num
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                active_cards = None
+
+        if event.type == pygame.MOUSEMOTION and active_cards is not None:
+            cards[active_cards].move_ip(event.rel)
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                shuffle(cards)
+
+        if event.type == pygame.QUIT:
+            run = False
+
+        pygame.display.flip()
+        clock.tick(60)
+
+pygame.quit()
+
+#5656652-class Player and class Computer, placing cards on the boards and class Game
+class Player:
+    def __init__(self, grid):
+        self.grid = grid
+        self.ships_to_place = 5 #number of ships player is allowed to place
+        self.placed_ships = 0 #counter to track how many ships the player has placed
+        self.ships_coords = []  #stores the coordinates of placed ships
+        self.decision_hand = random.sample(self.grid.coord_options, 7) #randomly select 7 out of 16 decision cards (coordinate-based guesses)
+
+    def place_ship(self, coord):
+        row, col = self.grid.coord_to_index(coord) #convert coordinate string (like 'B2') to grid indices
+        #check if the ship count allows placing and that the cell is empty
+        if self.placed_ships < self.ships_to_place and self.grid.player_grid[row][col] == "":
+            #place ship on the player's grid
+            self.grid.player_grid[row][col] = "S"
+            #save the placed coordinate and increase the counter
+            self.ships_coords.append(coord)
+            self.placed_ships += 1
+
+            print(f"Player placed ship at {coord}")
+            return True
+        return False #invalid placement or max ships already placed
+
+    def use_decision_card(self, coord, enemy_grid):
+        row, col = self.grid.coord_to_index(coord) #convert chosen coordinate to grid indices
+        hit = enemy_grid[row][col] == "S" #determine if it's a hit
+        enemy_grid[row][col] = "X" if hit else "O" #mark result on enemy grid for feedback (X for hit, O for miss)
+        print(f"Player shot at {coord} and {'hit!' if hit else 'missed.'}")
+        return hit
+
+    def draw_hand(self):
+        #print the player's current decision cards
+        print("Player Decision Cards:")
+        print(self.decision_hand)
+
+
+class Computer:
+    def __init__(self, grid):
+        self.grid = grid
+        self.ships_to_place = 5 #number of ships to place
+        self.placed_ships = 0 #counter to track placed ships
+        self.ships_coords = [] #save coordinates of placed ships
+        self.decision_hand = random.sample(self.grid.coord_options, 7) #randomly pick 7 decision cards (coordinates to "shoot" at player)
+
+    def place_ships_randomly(self):
+        #get all grid positions and shuffle them
+        available = list(self.grid.coord_options)
+        random.shuffle(available)
+
+        #place 5 ships at the first 5 unique positions
+        for i in range(self.ships_to_place):
+            coord = available[i]
+            row, col = self.grid.coord_to_index(coord)
+            #place ship on the computer's hidden grid
+            self.grid.computer_grid[row][col] = "S"
+            self.ships_coords.append(coord)
+            print(f"Computer placed ship at {coord}")
+
+    def shoot_randomly(self, player_grid):
+        if self.decision_hand:
+            #pop a coordinate from the hand to shoot at
+            coord = self.decision_hand.pop()
+            row, col = self.grid.coord_to_index(coord)
+            #check if it's a hit and mark grid with result
+            hit = player_grid[row][col] == "S"
+            player_grid[row][col] = "X" if hit else "O"
+
+            print(f"Computer shot at {coord} and {'hit!' if hit else 'missed.'}")
+            return coord, hit
+        return None, False  #no more decision cards
+
+class Game:
+    def __init__(self):
+        self.grid = GRID(size_blocks=150, x_upper_range=700, x_lower_range=100,
+                         y_upper_range=700, y_lower_range=100, color=WHITE)
+        self.player = Player(self.grid)
+        self.computer = Computer(self.grid)
+        self.player_points = 0
+        self.computer_points = 0
+        self.round = 0
+        self.max_rounds = 5
+
+        self.setup_game()
+
+    def setup_game(self):
+        print("Setting up the game...")
+        self.computer.place_ships_randomly()
+        self.player.draw_hand()
+        print("Computer and player are ready.")
+
+    def player_turn(self, coord):
+        if coord in self.player.decision_hand:
+            self.player.decision_hand.remove(coord)
+            hit = self.player.use_decision_card(coord, self.grid.computer_grid)
+            if hit:
+                self.player_points += 1
+            return True
+        else:
+            print("Invalid or already used decision card.")
+            return False
+
+    def computer_turn(self):
+        coord, hit = self.computer.shoot_randomly(self.grid.player_grid)
+        if hit:
+            self.computer_points += 1
+
+    def play_round(self, player_coord):
+        if self.round >= self.max_rounds:
+            print("Game over. No more rounds.")
+            return
+
+        if not self.player_turn(player_coord):
+            return  # skip computer turn if invalid player input
+
+        self.computer_turn()
+        self.round += 1
+        print(f"End of round {self.round}")
+        print(f"Score => Player: {self.player_points}, Computer: {self.computer_points}")
+
+    def is_game_over(self):
+        return self.round >= self.max_rounds
+
+    def show_final_result(self):
+        print("\nGame Over!")
+        print(f"Final Score => Player: {self.player_points}, Computer: {self.computer_points}")
+        if self.player_points > self.computer_points:
+            print("Player wins!")
+        elif self.player_points < self.computer_points:
+            print("Computer wins!")
+        else:
+            print("It's a tie!")
+
+#5656652-convert pixel clicks to a grid cell
+def get_grid_coord_from_click(x, y, grid_type="player"):
+    #player grid starts at x=100, y=100; each cell is 150x150
+    grid_origin_x = 100 if grid_type == "player" else 900
+    grid_origin_y = 100
+    cell_size = 150
+
+    #check if the click is inside the grid area
+    if grid_origin_x <= x < grid_origin_x + 4 * cell_size and \
+       grid_origin_y <= y < grid_origin_y + 4 * cell_size:
+
+        #calculate column and row index
+        col = (x - grid_origin_x) // cell_size
+        row = (y - grid_origin_y) // cell_size
+
+        #convert index to coordinate string (e.g., "B3")
+        row_label = ['A', 'B', 'C', 'D'][row]
+        col_label = str(int(col) + 1)
+        return row_label + col_label
+
+    return None #click was outside the grid
+game = Game()
+#5656652-end
