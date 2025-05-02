@@ -1,0 +1,147 @@
+#ChatGPT implementation of shuffling (this is  code shows how we need the cards to appear)
+import pygame
+import random
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Screen dimensions
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+CARD_LENGTH = 150
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
+# Game state variables
+cards = []
+active_cards = []
+
+# Colors
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+GREY = (144,141,143)
+BLUE = (173,216,230)
+RED = (182, 78, 67)
+ORANGE = (247,157,21)
+DARK_BLUE = (17,65,175)
+DARK_RED = (232,39,39)
+CARD_GREEN = (82,188,78)
+PURPLE = (142,56,218)
+PINK = (238,83,186)
+BANANA_YELLOW = (247,218,26)
+GREEN_DECK = (10,141,41)
+
+# Fonts
+font_1 = pygame.font.SysFont('arialblack', 75)
+font_2 = pygame.font.SysFont('arialblack', 20)
+font_3 = pygame.font.SysFont('arialblack', 65, bold=True)
+
+# Screen setup
+pygame.display.set_caption("Card Shuffle Game")
+clock = pygame.time.Clock()
+
+# Card class
+class CARD:
+    def __init__(self, x, y, width, height, color, text_top, text_bottom, text_color, text_top_x, text_top_y, text_bottom_x, text_bottom_y, font):
+        self.card_rect = pygame.Rect(x, y, width, height)
+        self.color = color
+        self.text_top = text_top
+        self.text_bottom = text_bottom
+        self.text_color = text_color
+        self.text_top_x = text_top_x
+        self.text_top_y = text_top_y
+        self.text_bottom_x = text_bottom_x
+        self.text_bottom_y = text_bottom_y
+        self.font = font
+
+    def draw(self):
+        pygame.draw.rect(screen, self.color, self.card_rect)
+        pygame.draw.rect(screen, BLACK, self.card_rect, 3)
+
+        top_text = self.font.render(self.text_top, True, self.text_color)
+        screen.blit(top_text, (self.card_rect.x + self.text_top_x, self.card_rect.y + self.text_top_y))
+
+        bottom_text = self.font.render(self.text_bottom, True, self.text_color)
+        screen.blit(bottom_text, (self.card_rect.x + self.text_bottom_x, self.card_rect.y + self.text_bottom_y))
+
+# Create pool of character cards
+character_card_pool = [
+    CARD(10, 30, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39, 60, font_2),
+    CARD(200, 30, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39, 60, font_2),
+    CARD(400, 30, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK, 120, 110, 39, 60, font_2),
+    CARD(600, 30, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK, 120, 110, 39, 60, font_2),
+    CARD(800, 30, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110, 18, 60, font_2),
+    CARD(1000, 30, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110, 18, 60, font_2),
+    CARD(1200, 30, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE, 120, 110, 22, 60, font_2),
+    CARD(1400, 30, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE, 110, 110, 22, 60, font_2),
+    CARD(10, 230, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110, 30, 60, font_2),
+    CARD(200, 230, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110, 30, 60, font_2),
+    CARD(400, 230, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110, 37, 60, font_2),
+    CARD(600, 230, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110, 37, 60, font_2),
+    CARD(800, 230, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE, 110, 110, 21, 60, font_2),
+    CARD(800, 230, CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE, 120, 110, 21, 60, font_2),
+    CARD(1000, 230, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK, 120, 110, 6, 60,
+                     font_2),
+    CARD(1200, 230, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 6, 60,
+                      font_2),
+    CARD(1400, 230, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_3)]
+
+
+class GRID():
+    def __init__(self,size_blocks,x_upper_range,x_lower_range,y_upper_range,y_lower_range,color):
+        self.size_blocks = size_blocks
+        self.x_upper_range = x_upper_range
+        self.x_lower_range = x_lower_range
+        self.y_upper_range = y_upper_range
+        self.y_lower_range = y_lower_range
+        self.color = color
+
+    def draw(self):
+
+        for x in range(self.x_upper_range,self.x_lower_range,self.size_blocks):
+            for y in range(self.y_upper_range,self.y_lower_range,self.size_blocks):
+                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
+                pygame.draw.rect(screen, self.color, square, 1)
+
+
+players_grid = GRID(150, 115, 715, 200, 800, BLACK)
+computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
+# Game loop
+def gameloop(set_cards):
+    global cards
+    global active_cards
+
+    if set_cards:
+        cards.clear()
+        selected_cards = random.sample(character_card_pool, 6)
+
+        for i, card in enumerate(selected_cards):
+            card.card_rect.topleft = (350 + i * (CARD_LENGTH + 20), 900)
+            cards.append(card)
+
+    run = True
+    while run:
+        screen.fill(BLUE)
+        players_grid.draw()
+        computers_grid.draw()
+        pygame.draw.rect(screen, GREEN_DECK, (300, 850, 1100, 250))
+
+        # Draw cards
+        for card in cards:
+            card.draw()
+
+        for card in active_cards:
+            card.draw()
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(60)
+
+# Start the game
+gameloop(True)
