@@ -174,14 +174,14 @@ shuffle_targets = []
 shuffle_triggered = False  # Flag to track if shuffle has been triggered
 
 def shuffle(cards):
-     #exclude the decision card from shuffling
+     #exclude the decision card from shuffling (5656652)
     decision_card = None
     for card in cards:
         if card.text_1 == 'X':  #check if it's the decision card
             decision_card = card
             break
 
-    #remove the decision card from the cards list for shuffling
+    #remove the decision card from the cards list for shuffling (5656652)
     if decision_card:
         cards.remove(decision_card)
 
@@ -203,7 +203,7 @@ def animate_cards(cards, targets, step, total_steps=20):
         card.card_rect.topleft = (int(card.x), int(card.y))
 
     return cards
-
+#method to place cards on the grid (5656652)
 def place_cards_in_grid(cards, grid):
     #choose 6 random empty grid positions
     positions = []
@@ -226,6 +226,7 @@ def game_loop():
 grids = [players_grid, computers_grid]
 coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
                          text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+#5656652
 def snap_to_grid(card, grid):
     #check if card was dropped in grid range
     for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
@@ -236,6 +237,7 @@ def snap_to_grid(card, grid):
                 card.card_rect.topleft = (x, y)
                 return True
     return False
+#5656652(end)
 
 # Main loop
 run = True
@@ -261,7 +263,7 @@ while run:
         cards = cards[:6]  # Keep only the first 6 cards after animation
         animating = False  # Stop animation
         shuffle_triggered = True  # Prevent further shuffling until reset
-        #place computer's cards in computer grid
+        #place computer's cards in computer grid (5656652)
         place_cards_in_grid(cards[6:], computers_grid)
         for card in cards[6:]:
             card.show()  #this will show computer cards after placement
@@ -303,7 +305,7 @@ while run:
                 #store for later snapping
                 cards[:] = player_cards + computer_cards
 
-                #auto-place computer cards after animation completes
+                #auto-place computer cards after animation completes (5656652)
                 computer_cards_to_place = computer_cards  #store temporarily
 
         if event.type == pygame.QUIT:
