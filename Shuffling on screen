@@ -112,16 +112,41 @@ CARD(1200,230,CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLAC
 CARD(1400,230,CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46,30,0,0,font_2)  # Decision card
 
 #5673324
+#separation of the shuffling algorithm logic(Fisher-Yates) and the animation logic for displaying cards
+
+current_step = 0
+animating = False
+shuffle_targets = []
+shuffle_triggered = False  # Flag to track if shuffle has been triggered
+
 def shuffle(cards):
-    shuffle_targets = [(random.randint(50, 700), random.randint(50, 500)) for _ in cards]
-    for step in range(20):
-        for i, card in enumerate(cards):
-            dx = (shuffle_targets[i][0] - card.x) // (20 - step)
-            dy = (shuffle_targets[i][1] - card.y) // (20 - step)
-            card.x += dx
-            card.y += dy
-            card.card_rect.topleft = (card.x, card.y)
-#5673324
+    n = len(cards)
+    for i in range(n-1, 0, -1):
+        j = randint(0, i+1)
+        cards[i], cards[j] = cards[j], cards[i]
+
+def animate_cards(cards, targets, step, total_steps=20):
+    # Ensure we're animating only the cards in the shuffle_targets
+    for i, card in enumerate(cards[:6]):  # Only animate the first 6 cards
+        dx = (targets[i][0] - card.x) // (total_steps - step)
+        dy = (targets[i][1] - card.y) // (total_steps - step)
+        card.x += dx
+        card.y += dy
+        card.card_rect.topleft = (int(card.x), int(card.y))
+
+    return cards
+
+def reset_game():
+    global shuffle_triggered, current_step, animating, cards
+    # Reset game state, including shuffle and animation
+    shuffle_triggered = False
+    current_step = 0
+    animating = False
+    cards = []  # Reset the cards list
+    # Re-create the cards (assuming your card creation logic is included here)
+    # (This step will reinitialize your card setup)
+
+# Main loop
 run = True
 while run:
     screen.fill(BLUE)
@@ -129,12 +154,20 @@ while run:
     drawGridplayer()
     drawGridcomputer()
 
+    # Display cards
     for c in cards:
         c.show()
 
-    pygame.display.update()
-    pygame.time.delay(30)
+    # Animation step
+    if animating and current_step < 20:
+        animate_cards(cards, shuffle_targets, current_step)
+        current_step += 1
+    elif animating and current_step >= 20:
+        cards = cards[:6]  # Keep only the first 6 cards after animation
+        animating = False  # Stop animation
+        shuffle_triggered = True  # Prevent further shuffling until reset
 
+    # Event handling
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -150,8 +183,18 @@ while run:
             cards[active_cards].move_ip(event.rel)
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and not shuffle_triggered:  # Only allow shuffle once
                 shuffle(cards)
+                shuffled_cards = cards[:6]  # Get the first 6 shuffled cards
+                start_x = 300
+                spacing = 150  # Set more space between the shuffled cards
+                shuffle_targets = [(start_x + i * spacing, 760) for i in range(6)]  # Spread cards horizontally
+                current_step = 0
+                animating = True
+                shuffle_triggered = True  # Prevent further shuffling until reset
+
+            elif event.key == pygame.K_r:  # Press 'R' to reset the game
+                reset_game()
 
         if event.type == pygame.QUIT:
             run = False
@@ -160,3 +203,4 @@ while run:
     clock.tick(60)
 
 pygame.quit()
+
