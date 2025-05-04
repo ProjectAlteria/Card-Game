@@ -3,6 +3,7 @@
 # Mouse interaction (5673324) + Decision Cards (5677161)
 # Sara later added class structure for character cards
 #Eman combined the Grid Class, Text Class and Card Class logic into one file on 4th May 2025
+#Ana added method to place cards on the grid
 import sys
 import pygame
 import random
