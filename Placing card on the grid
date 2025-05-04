@@ -174,10 +174,24 @@ shuffle_targets = []
 shuffle_triggered = False  # Flag to track if shuffle has been triggered
 
 def shuffle(cards):
+     #exclude the decision card from shuffling
+    decision_card = None
+    for card in cards:
+        if card.text_1 == 'X':  #check if it's the decision card
+            decision_card = card
+            break
+
+    #remove the decision card from the cards list for shuffling
+    if decision_card:
+        cards.remove(decision_card)
+
     n = len(cards)
     for i in range(n-1, 0, -1):
         j = randint(0, i+1)
         cards[i], cards[j] = cards[j], cards[i]
+
+    if decision_card:
+        cards.append(decision_card)
 
 def animate_cards(cards, targets, step, total_steps=20):
     # Ensure we're animating only the cards in the shuffle_targets
