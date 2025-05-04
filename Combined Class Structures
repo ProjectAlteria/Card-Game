@@ -11,8 +11,10 @@ from random import randint
 pygame.init()
 clock = pygame.time.Clock()
 # Get the screen resolution of the user
-screen_width, screen_height = pygame.display.Info().current_w, pygame.display.Info().current_h
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
 active_cards = None
@@ -204,7 +206,7 @@ coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_
 run = True
 while run:
     screen.fill(BLUE)
-    pygame.draw.rect(screen, GREEN_DECK, (252, 725, 1100, 175))
+    pygame.draw.rect(screen, GREEN_DECK, (300, 850, 1100, 250))
 
     for g in grids:
         g.draw()
@@ -244,9 +246,9 @@ while run:
             if event.key == pygame.K_SPACE and not shuffle_triggered:  # Only allow shuffle once
                 shuffle(cards)
                 shuffled_cards = cards[:6]  # Get the first 6 shuffled cards
-                start_x = 300
-                spacing = 150  # Set more space between the shuffled cards
-                shuffle_targets = [(start_x + i * spacing, 760) for i in range(6)]  # Spread cards horizontally
+                start_x = 320
+                spacing = 180  # Set more space between the shuffled cards
+                shuffle_targets = [(start_x + i * spacing, 900) for i in range(6)]  # Spread cards horizontally
                 current_step = 0
                 animating = True
                 shuffle_triggered = True  # Prevent further shuffling until reset
