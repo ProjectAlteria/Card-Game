@@ -3,6 +3,7 @@
 # Mouse interaction (5673324) + Decision Cards (5677161)
 # Sara later added class structure for character cards
 #Eman combined the Grid Class, Text Class and Card Class logic into one file on 4th May 2025
+#Ana added method to place cards on the grid
 import sys
 import pygame
 import random
@@ -174,10 +175,24 @@ shuffle_targets = []
 shuffle_triggered = False  # Flag to track if shuffle has been triggered
 
 def shuffle(cards):
+     #exclude the decision card from shuffling (5656652)
+    decision_card = None
+    for card in cards:
+        if card.text_1 == 'X':  #check if it's the decision card
+            decision_card = card
+            break
+
+    #remove the decision card from the cards list for shuffling (5656652)
+    if decision_card:
+        cards.remove(decision_card)
+
     n = len(cards)
     for i in range(n-1, 0, -1):
         j = randint(0, i+1)
         cards[i], cards[j] = cards[j], cards[i]
+
+    if decision_card:
+        cards.append(decision_card)
 
 def animate_cards(cards, targets, step, total_steps=20):
     # Ensure we're animating only the cards in the shuffle_targets
@@ -190,6 +205,18 @@ def animate_cards(cards, targets, step, total_steps=20):
 
     return cards
 
+#method to place cards on the grid (5656652)
+def place_cards_in_grid(cards, grid):
+    #choose 6 random empty grid positions
+    positions = []
+    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
+        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):
+            positions.append((x, y))
+    random.shuffle(positions)
+    for i, card in enumerate(cards[:6]):
+        card.x, card.y = positions[i]
+        card.card_rect.topleft = positions[i]
+
 def game_loop():
     global shuffle_triggered, current_step, animating, cards
     # Reset game state, including shuffle and animation
@@ -201,6 +228,19 @@ def game_loop():
 grids = [players_grid, computers_grid]
 coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
                          text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+
+#5656652
+def snap_to_grid(card, grid):
+    #check if card was dropped in grid range
+    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
+        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):
+            cell = pygame.Rect(x, y, grid.size_blocks, grid.size_blocks)
+            if cell.collidepoint(card.card_rect.center):
+                card.x, card.y = x, y
+                card.card_rect.topleft = (x, y)
+                return True
+    return False
+#5656652(end)
 
 # Main loop
 run = True
@@ -226,6 +266,12 @@ while run:
         cards = cards[:6]  # Keep only the first 6 cards after animation
         animating = False  # Stop animation
         shuffle_triggered = True  # Prevent further shuffling until reset
+        #place computer's cards in computer grid (5656652)
+        place_cards_in_grid(cards[6:], computers_grid)
+        for card in cards[6:]:
+            card.show()  #this will show computer cards after placement
+        for c in cards:
+            c.show()
 
     # Event handling
     for event in pygame.event.get():
@@ -237,6 +283,8 @@ while run:
 
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
+                if active_cards is not None:
+                    snap_to_grid(cards[active_cards], players_grid)
                 active_cards = None
 
         if event.type == pygame.MOUSEMOTION and active_cards is not None:
@@ -245,7 +293,9 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and not shuffle_triggered:  # Only allow shuffle once
                 shuffle(cards)
-                shuffled_cards = cards[:6]  # Get the first 6 shuffled cards
+                shuffled_cards = cards[:12]  #take 6 for player, 6 for computer
+                player_cards = shuffled_cards[:6]
+                computer_cards = shuffled_cards[6:12]
                 start_x = 320
                 spacing = 180  # Set more space between the shuffled cards
                 shuffle_targets = [(start_x + i * spacing, 900) for i in range(6)]  # Spread cards horizontally
@@ -253,6 +303,11 @@ while run:
                 animating = True
                 shuffle_triggered = True  # Prevent further shuffling until reset
 
+                #store for later snapping
+                cards[:] = player_cards + computer_cards
+
+                #auto-place computer cards after animation completes (5656652)
+                computer_cards_to_place = computer_cards  #store temporarily
 
 
         if event.type == pygame.QUIT:
