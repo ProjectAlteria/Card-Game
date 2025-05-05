@@ -1,0 +1,89 @@
+#5677161
+import pygame
+import sys
+
+
+
+pygame.init()
+
+WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1600
+
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT),pygame.FULLSCREEN)
+
+clock = pygame.time.Clock()
+
+start_time = pygame.time.get_ticks()
+duration = 6000
+
+
+BROWN = (121, 85, 38)
+BLUE = (173,216,230)
+BLACK = (0,0,0)
+YELLOW_TEXT = (255, 227, 132)
+WHITE = (255,255,255)
+RED = (182, 78, 67)
+BLUE2 = (42, 67, 148 )
+GREY = (144, 141, 143)
+GREEN_DECK = (10, 141, 41)
+
+font_8 = pygame.font.SysFont('arialblack', 70, )
+
+
+
+class GRID():
+    def __init__(self, size_blocks, x_upper_range, x_lower_range, y_upper_range, y_lower_range, color):
+        self.size_blocks = size_blocks
+        self.x_upper_range = x_upper_range
+        self.x_lower_range = x_lower_range
+        self.y_upper_range = y_upper_range
+        self.y_lower_range = y_lower_range
+        self.color = color
+
+    def draw(self):
+
+        for x in range(self.x_upper_range, self.x_lower_range, self.size_blocks):
+            for y in range(self.y_upper_range, self.y_lower_range, self.size_blocks):
+                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
+                pygame.draw.rect(screen, self.color, square, 1)
+
+players_grid = GRID(150, 115, 715, 200, 800, BLACK)
+computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
+
+
+class TEXT():
+    def __init__(self, text, font, text_color,x,y):
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.x = x
+        self.y = y
+
+    def text_objects(self):
+        visual = self.font.render(self.text, True, self.text_color)
+        screen.blit(visual, (self.x,self.y))
+
+explaination = TEXT('You hit a ship. It was []', font_8, YELLOW_TEXT,440,57)
+
+while True:
+    current_time = pygame.time.get_ticks()
+    elapsed_time = current_time - start_time
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+    screen.fill(BLUE)
+    players_grid.draw()
+    computers_grid.draw()
+    pygame.draw.rect(screen, GREEN_DECK, (300, 850, 1100, 250))
+
+    if elapsed_time < duration:
+
+        pygame.draw.rect(screen, BROWN, (360, 50, 1050, 130))
+
+        pygame.draw.rect(screen, BLACK, (360, 50, 1050, 130), 4)
+
+        explaination.text_objects()
+
+    pygame.display.update()
+    clock.tick(60)
