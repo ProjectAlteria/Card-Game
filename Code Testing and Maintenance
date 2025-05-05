@@ -1,0 +1,37 @@
+#5673324
+#implementing Pytest framework and code to test the Card Class
+import pygame
+import pytest
+from source.card_class import CARD
+pygame.font.init() #had to initialise for pygame fonts to work
+font = pygame.font.SysFont("arialblack", 20) #declared it outside the test so it could be used
+
+#   Test for Card Initialisation
+def test_card_init():
+    card = CARD(
+        x = 800, y=230,
+        width = 150, height=150,
+        color= 'PINK',
+        text_1 = 'HMS Mary',text_2 = '14', #text2 is the points the card holds
+        text_color = 'WHITE',
+        text_1_x = '110', #x1 coordinate
+        text_1_y = '110', #y1 coordinate
+        text_2_x = '21', #x2 coordinate
+        text_2_y = '60', #y2 coordinate
+        font = font
+
+    )
+    assert card.x == 800
+    assert card.y == 230
+    assert card.width == 150
+    assert card.height == 150
+    assert card.color == 'PINK'
+    assert card.text_1 == 'HMS Mary'
+    assert card.text_2 == '14'
+    assert card.text_color == 'WHITE'
+    assert card.text_1_x == '110'
+    assert card.text_1_y == '110'
+    assert card.text_2_x == '21'
+    assert card.text_2_y == '60'
+    assert card.font == font
+#5673324
