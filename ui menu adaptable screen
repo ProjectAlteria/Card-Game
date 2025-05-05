@@ -12,7 +12,9 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Main Menu')
 active_cards = None
 cards = []
-CARD_LENGTH = 150
+CARD_LENGTH = int(SCREEN_WIDTH*0.09375)
+button_width = SCREEN_WIDTH * 0.34
+button_height = SCREEN_HEIGHT * 0.13
 
 start_time = pygame.time.get_ticks()
 duration = 8000
@@ -152,8 +154,8 @@ class GRID():
                 pygame.draw.rect(screen, self.color, square, 1)
 
 
-players_grid = GRID(150, SCREEN_WIDTH*.071875, SCREEN_WIDTH *.353125, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
-computers_grid = GRID(150, SCREEN_WIDTH*.59375, SCREEN_WIDTH *.90625, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
+players_grid = GRID(CARD_LENGTH, SCREEN_WIDTH*.071875, SCREEN_WIDTH *.353125, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
+computers_grid = GRID(CARD_LENGTH, SCREEN_WIDTH*.59375, SCREEN_WIDTH *.90625, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
 
 class TEXT():
     def __init__(self, text, font, text_color,x,y):
@@ -333,29 +335,29 @@ def rules_page():
         clock.tick(60)
 
 
-play_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.450, 600, 150, font_1, WHITE, 'Play', lambda: gameloop(True), normal_color=GREEN_BUTTON)
-rules_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.635, 600, 150, font_1, WHITE, 'Rules', rules_page, normal_color=ORANGE_BUTTON)
-ex_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.815, 600, 150, font_1, WHITE, 'Exit', lambda: gameloop(False), normal_color=RED_BUTTON)
+play_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.450, button_width, button_height, font_1, WHITE, 'Play', lambda: gameloop(True), normal_color=GREEN_BUTTON)
+rules_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.635, button_width, button_height, font_1, WHITE, 'Rules', rules_page, normal_color=ORANGE_BUTTON)
+ex_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.815, button_width, button_height, font_1, WHITE, 'Exit', lambda: gameloop(False), normal_color=RED_BUTTON)
 
 
-cruise_3 = CARD(SCREEN_WIDTH*0.215, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39, 60, font_2)
-cruise_4 = CARD(SCREEN_WIDTH*0.315, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39, 60, font_2)
-carrier_8 = CARD(SCREEN_WIDTH*0.415, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK, 120, 110, 39, 60, font_2)
-carrier_7 = CARD(SCREEN_WIDTH*0.515, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK, 120, 110, 39, 60, font_2)
-submarine_6 = CARD(SCREEN_WIDTH*0.615, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110, 18, 60, font_2)
-submarine_12 = CARD(SCREEN_WIDTH*0.715, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110, 18, 60, font_2)
-destroyer_4 = CARD(SCREEN_WIDTH*0.9, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE, 120, 110, 22, 60, font_2)
-destroyer_14 = CARD(SCREEN_WIDTH*0.8, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE, 110, 110, 22, 60, font_2)
-gunboat_2 = CARD(SCREEN_WIDTH*0.7, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110, 30, 60, font_2)
-gunboat_12 = CARD(SCREEN_WIDTH*0.6, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110, 30, 60, font_2)
-paladin_5 = CARD(SCREEN_WIDTH*0.5, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110, 37, 60, font_2)
-paladin_7 = CARD(SCREEN_WIDTH*0.4, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110, 37, 60, font_2)
-HMS_mary_14 = CARD(SCREEN_WIDTH*0.3, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE, 110, 110, 21, 60, font_2)
-HMS_mary_1 = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE, 120, 110, 21, 60, font_2)
-banana_boat_5 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK, 120, 110, 6, 60,
+cruise_3 = CARD(SCREEN_WIDTH*0.215, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 45, 60, font_2)
+cruise_4 = CARD(SCREEN_WIDTH*0.315, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 45, 60, font_2)
+carrier_8 = CARD(SCREEN_WIDTH*0.415, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK, 120, 110, 45, 60, font_2)
+carrier_7 = CARD(SCREEN_WIDTH*0.515, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK, 120, 110, 45, 60, font_2)
+submarine_6 = CARD(SCREEN_WIDTH*0.615, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110, 24, 60, font_2)
+submarine_12 = CARD(SCREEN_WIDTH*0.715, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110, 24, 60, font_2)
+destroyer_4 = CARD(SCREEN_WIDTH*0.9, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE, 120, 110, 28, 60, font_2)
+destroyer_14 = CARD(SCREEN_WIDTH*0.8, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE, 110, 110, 28, 60, font_2)
+gunboat_2 = CARD(SCREEN_WIDTH*0.7, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110, 36, 60, font_2)
+gunboat_12 = CARD(SCREEN_WIDTH*0.6, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110, 36, 60, font_2)
+paladin_5 = CARD(SCREEN_WIDTH*0.5, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110, 43, 60, font_2)
+paladin_7 = CARD(SCREEN_WIDTH*0.4, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110, 43, 60, font_2)
+HMS_mary_14 = CARD(SCREEN_WIDTH*0.3, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE, 110, 110, 27, 60, font_2)
+HMS_mary_1 = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE, 120, 110, 27, 60, font_2)
+banana_boat_5 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK, 120, 110, 12, 60,
                      font_2)
-banana_boat_13 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 6, 60,
+banana_boat_13 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 12, 60,
                       font_2)
-decision_card = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_3)
+decision_card = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 52, 30, 0, 0, font_3)
 
 game_menu()
