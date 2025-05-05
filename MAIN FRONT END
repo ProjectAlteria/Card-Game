@@ -2,7 +2,11 @@
 
 import pygame
 import sys
+#modification 5673749
+import backend
 
+backend_grid = backend.GRID(150, 115, 715, 200, 800, (0, 0, 0))
+# ends here
 pygame.init()
 
 WINDOW_HEIGHT = 900
@@ -249,10 +253,17 @@ def gameloop(set):
                         for num, c in enumerate(cards):
                             if c.collidepoint(event.pos):
                                 active_cards = num
-
+                # modified 5673749
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
+                        if active_cards is not None:
+                            card_obj = cards[active_cards]
+                            drop_x, drop_y = card_obj.card_rect.center
+                            # check if dropped on player grid and send to backend
+                            if 115 <= drop_x <= 715 and 200 <= drop_y <= 800:
+                                backend_grid.place_card_from_frontend(drop_x, drop_y, card_label=card_obj.text_1, grid_type="player")
                         active_cards = None
+                # modification ends here
 
                 if event.type == pygame.MOUSEMOTION:
                     if active_cards is not None:
