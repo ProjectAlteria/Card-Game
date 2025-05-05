@@ -1,0 +1,364 @@
+# 5677161
+
+import pygame
+import sys
+
+pygame.init()
+
+info = pygame.display.Info()
+SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+clock = pygame.time.Clock()
+pygame.display.set_caption('Main Menu')
+active_cards = None
+cards = []
+CARD_LENGTH = int(SCREEN_WIDTH*0.09375)
+button_width = SCREEN_WIDTH * 0.34
+button_height = SCREEN_HEIGHT * 0.13
+
+
+start_time = pygame.time.get_ticks()
+duration = 8000
+duration_1 = 2000
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+BLUE = (173, 216, 230)
+BLUE2 = (42, 67, 148)
+YELLOW_TEXT = (255, 227, 132)
+BROWN = (121, 85, 38)
+GREEN_BUTTON = (65, 154, 80)
+RED_BUTTON = (182, 78, 67)
+ORANGE_BUTTON = (247, 157, 21)
+GREY = (144, 141, 143)
+RED = (182, 78, 67)
+ORANGE = (247, 157, 21)
+DARK_BLUE = (17, 65, 175)
+DARK_RED = (232, 39, 39)
+CARD_GREEN = (82, 188, 78)
+PURPLE = (142, 56, 218)
+PINK = (238, 83, 186)
+BANANA_YELLOW = (247, 218, 26)
+GREEN_DECK = (10, 141, 41)
+
+font = pygame.font.SysFont('arialblack', 150, bold=True)
+font_1 = pygame.font.SysFont('arialblack', 75)
+font_2 = pygame.font.SysFont('arialblack', 20)
+font_3 = pygame.font.SysFont('arialblack', 65, bold=True)
+font_4 = pygame.font.SysFont('arialblack', 100, bold=True)
+
+objects = []
+
+
+class Button:
+    def __init__(self, x, y, width, height, font_text, color_text, buttonText='Button', onclick=None, onepress=False,
+                 normal_color=None):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.font_text = font_text
+        self.color_text = color_text
+        self.onclick = onclick
+        self.onepress = onepress
+        self.alreadypressed = False
+
+        self.fill_color = {
+            'normal': normal_color,
+            'on': '#000000',
+            'pressed': '#ffffff'
+        }
+
+        self.button_surface = pygame.Surface((self.width, self.height))
+        self.button_rect = pygame.Rect(int(self.x), int(self.y), self.width, self.height)
+
+        self.buttonSurf = self.font_text.render(buttonText, True, self.color_text)
+
+        objects.append(self)
+
+    def process(self):
+        mouse = pygame.mouse.get_pos()
+        self.button_surface.fill(self.fill_color['normal'])
+
+        if self.button_rect.collidepoint(mouse):
+            self.button_surface.fill(self.fill_color['on'])
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.button_surface.fill(self.fill_color['pressed'])
+                if self.onepress:
+                    self.onclick()
+                elif not self.alreadypressed:
+                    self.onclick()
+                    self.alreadypressed = True
+                    self.alreadypressed = False
+
+        self.button_surface.blit(self.buttonSurf, [self.button_rect.width / 2 - self.buttonSurf.get_rect().width / 2,
+                                                   self.button_rect.height / 2 - self.buttonSurf.get_rect().height / 2])
+
+        screen.blit(self.button_surface, self.button_rect)
+
+
+class CARD():
+    def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y,
+                 font):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.text_1 = text_1
+        self.text_2 = text_2
+        self.text_color = text_color
+        self.text_1_x = text_1_x
+        self.text_1_y = text_1_y
+        self.text_2_x = text_2_x
+        self.text_2_y = text_2_y
+        self.font = font
+
+        self.card_surface_1 = pygame.Surface((self.width, self.height))
+        self.card_surface_2 = self.card_surface_1.copy()
+        self.card_rect = pygame.Rect(int(self.x), int(self.y), self.width, self.height)
+        self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
+        self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
+        cards.append(self)
+
+    def show(self):
+        self.card_surface_1.fill(self.color)
+        self.card_surface_2.fill(self.color)
+        self.card_surface_1.blit(self.cardSurf_1, [int(self.text_1_x), int(self.text_1_y)])
+        self.card_surface_1.blit(self.cardSurf_2, [int(self.text_2_x), int(self.text_2_y)])
+
+        screen.blit(self.card_surface_1, self.card_rect)
+        pygame.draw.rect(screen, WHITE, self.card_rect, 5)
+
+    def collidepoint(self,
+                     pos):  # code that detects the collide point of the mouse and the location of the decision cards
+        return self.card_rect.collidepoint(pos)
+
+    def move_ip(self, rel):
+        self.card_rect.move_ip(rel)
+
+
+class GRID():
+    def __init__(self, size_blocks, x_upper_range, x_lower_range, y_upper_range, y_lower_range, color):
+        self.size_blocks = size_blocks
+        self.x_upper_range = x_upper_range
+        self.x_lower_range = x_lower_range
+        self.y_upper_range = y_upper_range
+        self.y_lower_range = y_lower_range
+        self.color = color
+
+    def draw(self):
+
+        for x in range(int(self.x_upper_range), int(self.x_lower_range), self.size_blocks):
+            for y in range(int(self.y_upper_range), int(self.y_lower_range), self.size_blocks):
+                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
+                pygame.draw.rect(screen, self.color, square, 1)
+
+
+players_grid = GRID(CARD_LENGTH, SCREEN_WIDTH*.071875, SCREEN_WIDTH *.353125, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
+computers_grid = GRID(CARD_LENGTH, SCREEN_WIDTH*.59375, SCREEN_WIDTH *.90625, SCREEN_HEIGHT*.2, SCREEN_HEIGHT*.7, BLACK)
+
+class TEXT():
+    def __init__(self, text, font, text_color,x,y):
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.x = x
+        self.y = y
+
+    def text_objects(self, center=False):
+        visual = self.font.render(self.text, True, self.text_color)
+        screen.blit(visual, (int(self.x), int(self.y)))
+
+title = TEXT('Naval Battle', font, YELLOW_TEXT, SCREEN_WIDTH*0.210, SCREEN_HEIGHT*.080)
+
+def game_menu():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(BLUE2)
+        pygame.draw.rect(screen, BROWN, (SCREEN_WIDTH*0.155, SCREEN_HEIGHT*0.077, SCREEN_WIDTH*0.7, SCREEN_WIDTH*.15), border_radius=30)
+
+        title.text_objects()
+
+        for obj in objects:
+            obj.process()
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+text_ap= TEXT('A', font_3, BLACK,SCREEN_WIDTH*0.03125,SCREEN_HEIGHT*0.222)
+text_bp= TEXT('B', font_3, BLACK,SCREEN_WIDTH*0.03125,SCREEN_HEIGHT*0.355)
+text_cp= TEXT('C', font_3, BLACK,SCREEN_WIDTH*0.03125,SCREEN_HEIGHT*0.490)
+text_dp= TEXT('D', font_3, BLACK,SCREEN_WIDTH*0.03125,SCREEN_HEIGHT*0.625)
+text_1p= TEXT('1', font_3, BLACK,SCREEN_WIDTH*.103,SCREEN_HEIGHT*.105)
+text_2p= TEXT('2', font_3, BLACK,SCREEN_WIDTH*.190,SCREEN_HEIGHT*.105)
+text_3p= TEXT('3', font_3, BLACK,SCREEN_WIDTH*.276,SCREEN_HEIGHT*.105)
+text_4p= TEXT('4', font_3, BLACK,SCREEN_WIDTH*.365,SCREEN_HEIGHT*.105)
+
+text_ac= TEXT('A', font_3, BLACK,SCREEN_WIDTH*0.550,SCREEN_HEIGHT*0.222)
+text_bc= TEXT('B', font_3, BLACK,SCREEN_WIDTH*0.550,SCREEN_HEIGHT*0.355)
+text_cc= TEXT('C', font_3, BLACK,SCREEN_WIDTH*0.550,SCREEN_HEIGHT*0.490)
+text_dc= TEXT('D', font_3, BLACK,SCREEN_WIDTH*0.550,SCREEN_HEIGHT*0.625)
+text_1c= TEXT('1', font_3, BLACK,SCREEN_WIDTH*0.625,SCREEN_HEIGHT*.105)
+text_2c= TEXT('2', font_3, BLACK,SCREEN_WIDTH*0.714,SCREEN_HEIGHT*.105)
+text_3c= TEXT('3', font_3, BLACK,SCREEN_WIDTH*0.800,SCREEN_HEIGHT*.105)
+text_4c= TEXT('4', font_3, BLACK,SCREEN_WIDTH*0.885,SCREEN_HEIGHT*.105)
+
+game_text = TEXT('GAME STARTS',font_4, WHITE, SCREEN_WIDTH*0.278,SCREEN_HEIGHT*.453)
+
+def gameloop(set):
+    global active_cards
+    exit_x = []
+    grids = [players_grid, computers_grid]
+    coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
+                         text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+    if not set:
+        pygame.quit()
+        sys.exit()
+
+    elif set:
+        running = True
+        while running:
+            current_time = pygame.time.get_ticks()
+            elapsed_time = current_time - 2000
+
+            elapsed_time_1 = current_time - start_time
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            screen.fill(BLUE)
+
+            x_button = Button(SCREEN_WIDTH * 0.945, SCREEN_HEIGHT * 0, SCREEN_WIDTH*0.0625, SCREEN_WIDTH*0.0625, font_1, WHITE, 'X',
+                              lambda: gameloop(False), normal_color=RED)
+            exit_x.append(x_button)
+            for x in exit_x:
+                x.process()
+            pygame.draw.rect(screen, GREEN_DECK, (int(SCREEN_WIDTH*.1875), int(SCREEN_HEIGHT*.82), int(SCREEN_WIDTH*0.650), int(SCREEN_HEIGHT*0.190)))
+
+            for g in grids:
+                g.draw()
+
+            for co in coordinates_texts:
+                co.text_objects()
+
+            if elapsed_time+duration_1 < duration:
+
+                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH*0.550,  SCREEN_HEIGHT*.12, SCREEN_WIDTH*0.45,SCREEN_WIDTH*0.45))
+
+
+            for c in cards:
+                c.show()
+            # 5673324
+
+            if elapsed_time_1 < duration_1:
+                screen.fill(BLUE)
+                pygame.draw.rect(screen, BLUE2, (SCREEN_WIDTH*0.225, SCREEN_HEIGHT*0.43, SCREEN_WIDTH*0.584, SCREEN_WIDTH*.12), border_radius=30)
+                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH*0.225, SCREEN_HEIGHT*0.43, SCREEN_WIDTH*0.584, SCREEN_WIDTH*.12), 4, border_radius=30)
+                game_text.text_objects()
+
+
+
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for num, c in enumerate(cards):
+                            if c.collidepoint(event.pos):
+                                active_cards = num
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        active_cards = None
+
+                if event.type == pygame.MOUSEMOTION:
+                    if active_cards is not None:
+                        cards[active_cards].move_ip(event.rel)
+            # 5673324
+            x_button = Button(SCREEN_WIDTH*0.945, SCREEN_HEIGHT*0, 100, 100, font_1, WHITE, 'X', lambda: gameloop(False), normal_color=RED)
+            exit_x.append(x_button)
+
+            pygame.display.flip()
+
+        pygame.quit()
+
+
+def rules_page():
+    back_buttons = []
+
+    def backfunc():
+
+        for button in back_buttons:
+            if button in objects:
+                objects.remove(button)
+        game_menu()
+
+    back_button = Button(SCREEN_WIDTH*.750, SCREEN_HEIGHT*0.890, (button_width-110), (button_height-50), font_1, WHITE, 'Back', backfunc, normal_color=BLUE)
+    back_buttons.append(back_button)
+    while True:
+
+        screen.fill(BLUE2)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        pygame.draw.rect(screen, BROWN, (SCREEN_WIDTH*0.290, SCREEN_HEIGHT*0.05, SCREEN_WIDTH*0.43, SCREEN_WIDTH*0.105), border_radius=30)
+        rules_title = TEXT('RULES', font, YELLOW_TEXT, SCREEN_WIDTH*0.340, SCREEN_HEIGHT*0.03)
+        rules_title.text_objects()
+
+        rule1 = TEXT('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.', font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.32)
+        rule2 = TEXT('2) Cards are used as the main mechanic to interact with the grid.', font_2, WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.36)
+        rule3 = TEXT('3) The two types of cards are decision cards and character cards.', font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.40)
+        rule4 = TEXT('4) The decision cards allow the player to place a bet on where the opponent ship might be on the opponent board.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.44)
+        rule5 = TEXT('5) The character cards allow the player to place their own arrangement of ships on their side of the board.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.48)
+        rule6  = TEXT('6) There are 16 decision cards in total (representing the 16 unique locations on the board) but the player is only dealt a hand of 7 cards.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.52)
+        rule7 = TEXT('7) There are 16 character cards that are present for every play through for the player to place on their respective grid.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.56)
+        rule8 = TEXT('8) When the game starts, the player has to guess where the opponent ships may be on the grid using the decision cards.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.60)
+        rule9 = TEXT('9) The points gained are based on the type of card found by the player.', font_2, WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.64)
+        rule10 = TEXT('10) The game continues until the player and the opponent (the computer) have used up their 5 decision cards.',font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.68)
+        rule11 = TEXT('11 The game ends and the total number of points collected by each is counted.', font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.72)
+        rule12 = TEXT('12) The one with the highest number wins.', font_2, WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.76)
+        rule13 = TEXT('13) Let the battle begin!', font_2,WHITE, SCREEN_WIDTH*0.02, SCREEN_HEIGHT*0.80)
+
+        rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13]
+
+        for r in rules:
+            r.text_objects()
+
+        for button in back_buttons:
+            button.process()
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+play_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.450,  button_width, button_height, font_1, WHITE, 'Play', lambda: gameloop(True), normal_color=GREEN_BUTTON)
+rules_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.635,  button_width, button_height, font_1, WHITE, 'Rules', rules_page, normal_color=ORANGE_BUTTON)
+ex_button = Button(SCREEN_WIDTH*0.320, SCREEN_HEIGHT*0.815,  button_width, button_height, font_1, WHITE, 'Exit', lambda: gameloop(False), normal_color=RED_BUTTON)
+
+
+cruise_3 = CARD(SCREEN_WIDTH*0.215, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 45, 60, font_2)
+cruise_4 = CARD(SCREEN_WIDTH*0.315, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 45, 60, font_2)
+carrier_8 = CARD(SCREEN_WIDTH*0.415, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK, 120, 110, 45, 60, font_2)
+carrier_7 = CARD(SCREEN_WIDTH*0.515, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK, 120, 110, 45, 60, font_2)
+submarine_6 = CARD(SCREEN_WIDTH*0.615, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110, 24, 60, font_2)
+submarine_12 = CARD(SCREEN_WIDTH*0.715, SCREEN_HEIGHT*.85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110, 24, 60, font_2)
+destroyer_4 = CARD(SCREEN_WIDTH*0.9, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE, 120, 110, 28, 60, font_2)
+destroyer_14 = CARD(SCREEN_WIDTH*0.8, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE, 110, 110, 28, 60, font_2)
+gunboat_2 = CARD(SCREEN_WIDTH*0.7, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110, 36, 60, font_2)
+gunboat_12 = CARD(SCREEN_WIDTH*0.6, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110, 36, 60, font_2)
+paladin_5 = CARD(SCREEN_WIDTH*0.5, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110, 43, 60, font_2)
+paladin_7 = CARD(SCREEN_WIDTH*0.4, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110, 43, 60, font_2)
+HMS_mary_14 = CARD(SCREEN_WIDTH*0.3, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE, 110, 110, 27, 60, font_2)
+HMS_mary_1 = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE, 120, 110, 27, 60, font_2)
+banana_boat_5 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.33, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK, 120, 110, 12, 60,
+                     font_2)
+banana_boat_13 = CARD(SCREEN_WIDTH*0.1, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 12, 60,
+                      font_2)
+decision_card = CARD(SCREEN_WIDTH*0.2, SCREEN_HEIGHT*.50, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 52, 30, 0, 0, font_3)
+
+game_menu()
