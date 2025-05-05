@@ -22,7 +22,8 @@ BLUE2 = (42, 67, 148 )
 
 font_1 =  pygame.font.SysFont('arialblack', 65, bold=True)
 font_2 =  pygame.font.SysFont('arialblack', 50, bold=True)
-font_3 = pygame.font.SysFont('arialblack', 30, bold=True)
+font_7 = pygame.font.SysFont('arialblack', 30)
+font_6 =  pygame.font.SysFont('arialblack', 50)
 objects = []
 
 class GRID():
@@ -141,19 +142,19 @@ while True:
     pygame.draw.rect(screen, BLACK, (500, 150, 600, 600), 4)
 
     board_title = TEXT("SCORE BOARD", font_1, YELLOW_TEXT,520,180 )
-    player_score = TEXT("Player score:", font_2, YELLOW_TEXT,520,300 )
-    computer_score = TEXT('Computer score:', font_2, YELLOW_TEXT,520,390 )
-    winner = TEXT('The winner is:', font_2, YELLOW_TEXT,590,490 )
+    player_score = TEXT("Player score:", font_6, YELLOW_TEXT,520,300 )
+    computer_score = TEXT('Computer score:', font_6, YELLOW_TEXT,520,390 )
+    winner = TEXT('The winner is:', font_6, YELLOW_TEXT,590,490 )
 
     texts = [board_title, player_score, computer_score, winner]
 
     for t in texts:
         t.text_objects()
 
-    play_button = Button(550, 660, 200, 70, font_3,WHITE,'Restart', lambda: gameloop(True), normal_color=BLUE2)
+    play_button = Button(550, 660, 200, 70, font_7,WHITE,'Restart', lambda: gameloop(True), normal_color=BLUE2)
     buttons.append(play_button)
 
-    ex_button = Button(850, 660, 200, 70, font_3,WHITE,'Exit', lambda: gameloop(False), normal_color=RED, )
+    ex_button = Button(850, 660, 200, 70, font_7,WHITE,'Exit', lambda: gameloop(False), normal_color=RED, )
     buttons.append(ex_button)
 
     for button in buttons:
