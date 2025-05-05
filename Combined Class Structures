@@ -214,7 +214,7 @@ def animate_cards(cards, targets, step, total_steps=20):
     return cards
 
 #method to place cards on the grid (5656652)
-def place_cards_in_grid(cards, grid):
+def place_cards_in_grid(cards, grid, occupancy_dict=None):
     #choose 6 random empty grid positions
     positions = []
     for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
