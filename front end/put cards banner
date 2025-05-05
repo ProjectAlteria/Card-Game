@@ -27,7 +27,7 @@ BLUE2 = (42, 67, 148 )
 GREY = (144, 141, 143)
 GREEN_DECK = (10, 141, 41)
 
-font_3 = pygame.font.SysFont('arialblack', 30, bold=True)
+font_3 = pygame.font.SysFont('arialblack', 30)
 
 
 
