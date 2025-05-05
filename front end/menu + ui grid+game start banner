@@ -8,7 +8,7 @@ pygame.init()
 WINDOW_HEIGHT = 900
 WINDOW_WIDTH = 1600
 
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 pygame.display.set_caption('Main Menu')
 active_cards = None
