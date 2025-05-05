@@ -17,7 +17,13 @@ WINDOW_WIDTH = 1600
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
-
+#5656652
+score = 0  #initialize player score
+computer_grid_occupancy = {}  #new dictionary to track computer's cards
+hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
+decision_cards_displayed = False
+decision_cards = []
+#5656652 (end)
 active_cards = None
 cards = []
 CARD_LENGTH = 150
@@ -70,6 +76,8 @@ class GRID():
 
 players_grid = GRID(150, 115, 715, 200, 800, BLACK)
 computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
+
+player_grid_occupancy = {}#5656652
 
 #Text Class
 class TEXT():
@@ -214,8 +222,20 @@ def place_cards_in_grid(cards, grid):
             positions.append((x, y))
     random.shuffle(positions)
     for i, card in enumerate(cards[:6]):
-        card.x, card.y = positions[i]
-        card.card_rect.topleft = positions[i]
+        pos = positions[i]
+        card.x, card.y = pos
+        card.card_rect.topleft = pos
+        if occupancy_dict is not None:
+            occupancy_dict[pos] = card
+#method for 6 decisions cards on the bottom (5656652)
+def create_decision_cards():
+    global decision_cards
+    spacing = 180
+    start_x = 320
+    y = 860  # inside the green deck
+    for i in range(6):
+        card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
+        decision_cards.append(card)
 
 def game_loop():
     global shuffle_triggered, current_step, animating, cards
@@ -236,8 +256,19 @@ def snap_to_grid(card, grid):
         for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):
             cell = pygame.Rect(x, y, grid.size_blocks, grid.size_blocks)
             if cell.collidepoint(card.card_rect.center):
+                #if cell is occupied by another card, reject placement
+                if (x, y) in player_grid_occupancy and player_grid_occupancy[(x, y)] != card:
+                    return False  # Blocked
+
+                #free previous spot (if any)
+                keys_to_remove = [k for k, v in player_grid_occupancy.items() if v == card]
+                for k in keys_to_remove:
+                    del player_grid_occupancy[k]
+
+                #snap to new cell and mark as occupied
                 card.x, card.y = x, y
                 card.card_rect.topleft = (x, y)
+                player_grid_occupancy[(x, y)] = card
                 return True
     return False
 #5656652(end)
@@ -253,10 +284,36 @@ while run:
 
     for c in coordinates_texts:
         c.text_objects()
-
-    # Display cards
-    for c in cards:
+    #5656652
+    score_display = font_1.render(f"Score: {score}", True, BLACK)
+    screen.blit(score_display, (20, 20))
+    #show only player cards and decision cards
+    for c in cards[:6]:  #first 6 are player cards
         c.show()
+    for dc in decision_cards:
+        dc.show()
+
+    if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
+        create_decision_cards()
+        decision_cards_displayed = True
+
+    for dc in decision_cards:
+        dc.show()
+
+    if hit_banner_data:
+        card_name, points, start_time = hit_banner_data
+        if pygame.time.get_ticks() - start_time < 2000:  #show for 2 seconds
+            banner_rect = pygame.Rect(350, 400, 1000, 150)
+            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
+            pygame.draw.rect(screen, WHITE, banner_rect, 10) 
+
+            hit_text = f'HIT: {card_name} ({points} pts)'
+            text_surface = font_3.render(hit_text, True, (255, 227, 132))
+            text_rect = text_surface.get_rect(center=banner_rect.center)
+            screen.blit(text_surface, text_rect)
+        else:
+            hit_banner_data = None
+    #5656652(end)
 
     # Animation step
     if animating and current_step < 20:
@@ -266,13 +323,17 @@ while run:
         cards = cards[:6]  # Keep only the first 6 cards after animation
         animating = False  # Stop animation
         shuffle_triggered = True  # Prevent further shuffling until reset
-        #place computer's cards in computer grid (5656652)
-        place_cards_in_grid(cards[6:], computers_grid)
-        for card in cards[6:]:
-            card.show()  #this will show computer cards after placement
-        for c in cards:
-            c.show()
+        #5656652
+        player_cards = cards[:6]
+        computer_cards = cards[6:12]
 
+        # place and display computer's cards
+        place_cards_in_grid(computer_cards, computers_grid)
+
+        # update master list
+        cards = player_cards + computer_cards
+        place_cards_in_grid(computer_cards, computers_grid, computer_grid_occupancy)
+        #5656652 (end)
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -284,8 +345,29 @@ while run:
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 if active_cards is not None:
-                    snap_to_grid(cards[active_cards], players_grid)
-                active_cards = None
+                    #5656652
+                    selected_card = cards[active_cards]
+                    #if it's a decision card
+                    if selected_card.text_1 == 'X':
+                        for x in range(computers_grid.x_upper_range, computers_grid.x_lower_range,
+                                       computers_grid.size_blocks):
+                            for y in range(computers_grid.y_upper_range, computers_grid.y_lower_range,
+                                           computers_grid.size_blocks):
+                                cell = pygame.Rect(x, y, computers_grid.size_blocks, computers_grid.size_blocks)
+                                if cell.collidepoint(selected_card.card_rect.center):
+                                    if (x, y) in computer_grid_occupancy:
+                                        #hit
+                                        hit_card = computer_grid_occupancy[(x, y)]
+                                        hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks())
+                                        del computer_grid_occupancy[(x, y)]
+                                        score += int(hit_card.text_1)
+                                    #snap decision card anyway
+                                    selected_card.x, selected_card.y = x, y
+                                    selected_card.card_rect.topleft = (x, y)
+                    else:
+                        snap_to_grid(selected_card, players_grid)
+                    active_cards = None
+                    #5656652(end)
 
         if event.type == pygame.MOUSEMOTION and active_cards is not None:
             cards[active_cards].move_ip(event.rel)
