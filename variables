@@ -1,0 +1,50 @@
+#5677161
+import pygame
+pygame.init()
+info = pygame.display.Info()
+
+#screen
+SCREEN_WIDTH = info.current_w
+SCREEN_HEIGHT = info.current_h
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.FULLSCREEN)
+clock = pygame.time.Clock()
+NAME = pygame.display.set_caption('NAVAL BATTLE')
+
+#colors            R    G    B
+BLACK         = (  0,   0,   0)
+WHITE         = (255, 255, 255)
+BLUE          = (173, 216, 230)
+BLUE2         = ( 42,  67, 148)
+YELLOW_TEXT   = (255, 227, 132)
+BROWN         = (121,  85,  38)
+GREEN_BUTTON  = ( 65, 154,  80)
+RED_BUTTON    = (182,  78,  67)
+ORANGE_BUTTON = (247, 157,  21)
+GREY          = (144, 141, 143)
+RED           = (182,  78,  67)
+ORANGE        = (247, 157,  21)
+DARK_BLUE     = ( 17,  65, 175)
+DARK_RED      = (232,  39,  39)
+CARD_GREEN    = ( 82, 188,  78)
+PURPLE        = (142,  56, 218)
+PINK          = (238,  83, 186)
+BANANA_YELLOW = (247, 218,  26)
+GREEN_DECK    = ( 10, 141,  41)
+
+#fonts
+font = pygame.font.SysFont('arialblack', 150, bold=True)
+font_1 = pygame.font.SysFont('arialblack', 75)
+font_2 = pygame.font.SysFont('arialblack', 20)
+font_3 = pygame.font.SysFont('arialblack', 65, bold=True)
+font_4 = pygame.font.SysFont('arialblack', 100, bold=True)
+font_5 =  pygame.font.SysFont('arialblack', 50, bold=True)
+font_6 = pygame.font.SysFont('arialblack', 90)
+font_7 = pygame.font.SysFont('arialblack', 30)
+font_8 =  pygame.font.SysFont('arialblack', 50)
+
+#cards
+CARD_LENGTH = int(SCREEN_WIDTH * 0.09375)
+
+#buttons
+button_width = int(SCREEN_WIDTH * 0.34)
+button_height = int(SCREEN_HEIGHT * 0.13)
