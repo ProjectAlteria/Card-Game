@@ -34,4 +34,40 @@ def test_card_init():
     assert card.text_2_x == '21'
     assert card.text_2_y == '60'
     assert card.font == font
+
+# Test for Player Grid Initialisation
+def test_player_grid_init():
+    grid = GRID(
+        size_blocks=150,
+        x_upper_range=115,
+        x_lower_range=715,
+        y_upper_range=200,
+        y_lower_range=800,
+        color='BLACK'
+    )
+    assert grid.size_blocks == 150
+    assert grid.x_upper_range == 115
+    assert grid.x_lower_range == 715
+    assert grid.y_upper_range == 200
+    assert grid.y_lower_range == 800
+    assert grid.color == 'BLACK'
+
+
+# Test for Computer Grid Initialisation
+def test_computer_grid_init():
+    grid = GRID(
+        size_blocks=150,
+        x_upper_range=1000,
+        x_lower_range=1600,
+        y_upper_range=200,
+        y_lower_range=800,
+        color='BLACK'
+    )
+    assert grid.size_blocks == 150
+    assert grid.x_upper_range == 1000
+    assert grid.x_lower_range == 1600
+    assert grid.y_upper_range == 200
+    assert grid.y_lower_range == 800
+    assert grid.color == 'BLACK'
+
 #5673324
