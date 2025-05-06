@@ -211,80 +211,92 @@ text_4c= TEXT('4', font_3, BLACK,SCREEN_WIDTH*0.885,SCREEN_HEIGHT*.105)
 
 game_text = TEXT('GAME STARTS',font_4, WHITE, SCREEN_WIDTH*0.278,SCREEN_HEIGHT*.453)
 
+
 def gameloop(set):
     global active_cards
     exit_x = []
     grids = [players_grid, computers_grid]
-    coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
-                         text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+    coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p,
+                         text_ac, text_bc, text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+
     if not set:
         pygame.quit()
         sys.exit()
 
     elif set:
+        start_time = pygame.time.get_ticks()  # Moved here
+        duration = 2000  # 2 seconds
         running = True
-        while running:
-            current_time = pygame.time.get_ticks()
-            elapsed_time = current_time - 2000
 
-            elapsed_time_1 = current_time - start_time
+        while running:
+
+            current_time = pygame.time.get_ticks()
+            elapsed_time = current_time - start_time
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            screen.fill(BLUE)
 
-            x_button = Button(SCREEN_WIDTH * 0.945, SCREEN_HEIGHT * 0, SCREEN_WIDTH*0.0625, SCREEN_WIDTH*0.0625, font_1, WHITE, 'X',
-                              lambda: gameloop(False), normal_color=RED)
-            exit_x.append(x_button)
-            for x in exit_x:
-                x.process()
-            pygame.draw.rect(screen, GREEN_DECK, (int(SCREEN_WIDTH*.1875), int(SCREEN_HEIGHT*.82), int(SCREEN_WIDTH*0.650), int(SCREEN_HEIGHT*0.190)))
-
-            for g in grids:
-                g.draw()
-
-            for co in coordinates_texts:
-                co.text_objects()
-
-            if elapsed_time+duration_1 < duration:
-
-                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH*0.550,  SCREEN_HEIGHT*.12, SCREEN_WIDTH*0.45,SCREEN_WIDTH*0.45))
-
-
-            for c in cards:
-                c.show()
-            # 5673324
-
-            if elapsed_time_1 < duration_1:
+            if elapsed_time < duration:
                 screen.fill(BLUE)
-                pygame.draw.rect(screen, BLUE2, (SCREEN_WIDTH*0.225, SCREEN_HEIGHT*0.43, SCREEN_WIDTH*0.584, SCREEN_WIDTH*.12), border_radius=30)
-                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH*0.225, SCREEN_HEIGHT*0.43, SCREEN_WIDTH*0.584, SCREEN_WIDTH*.12), 4, border_radius=30)
+                pygame.draw.rect(screen, BLUE2,
+                                 (SCREEN_WIDTH * 0.225, SCREEN_HEIGHT * 0.43, SCREEN_WIDTH * 0.584, SCREEN_WIDTH * .12),
+                                 border_radius=30)
+                pygame.draw.rect(screen, BLACK,
+                                 (SCREEN_WIDTH * 0.225, SCREEN_HEIGHT * 0.43, SCREEN_WIDTH * 0.584, SCREEN_WIDTH * .12),
+                                 4, border_radius=30)
                 game_text.text_objects()
 
+            if elapsed_time > duration:
+
+                screen.fill(BLUE)
+                x_button = Button(SCREEN_WIDTH * 0.945, SCREEN_HEIGHT * 0, SCREEN_WIDTH * 0.0625, SCREEN_WIDTH * 0.0625,
+                              font_1, WHITE, 'X',
+                              lambda: gameloop(False), normal_color=RED)
+                exit_x.append(x_button)
+                for x in exit_x:
+                    x.process()
+                pygame.draw.rect(screen, GREEN_DECK, (
+                int(SCREEN_WIDTH * .1875), int(SCREEN_HEIGHT * .82), int(SCREEN_WIDTH * 0.650), int(SCREEN_HEIGHT * 0.190)))
+
+                for g in grids:
+                    g.draw()
+
+                for co in coordinates_texts:
+                    co.text_objects()
+
+            #if elapsed_time + duration_1 < duration:
+                #pygame.draw.rect(screen, BLACK,
+                                 #(SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * .12, SCREEN_WIDTH * 0.45, SCREEN_WIDTH * 0.45))
+
+                for c in cards:
+                    c.show()
 
 
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        for num, c in enumerate(cards):
-                            if c.collidepoint(event.pos):
-                                active_cards = num
-
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if event.button == 1:
-                        active_cards = None
-
-                if event.type == pygame.MOUSEMOTION:
-                    if active_cards is not None:
-                        cards[active_cards].move_ip(event.rel)
             # 5673324
-            x_button = Button(SCREEN_WIDTH*0.945, SCREEN_HEIGHT*0, 100, 100, font_1, WHITE, 'X', lambda: gameloop(False), normal_color=RED)
-            exit_x.append(x_button)
+
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if event.button == 1:
+                                for num, c in enumerate(cards):
+                                    if c.collidepoint(event.pos):
+                                        active_cards = num
+
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            if event.button == 1:
+                                active_cards = None
+
+                        if event.type == pygame.MOUSEMOTION:
+                            if active_cards is not None:
+                                cards[active_cards].move_ip(event.rel)
+
+            # 5673324
 
             pygame.display.flip()
 
         pygame.quit()
+
+
 
 
 def rules_page():
