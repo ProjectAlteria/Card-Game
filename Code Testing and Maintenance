@@ -1,10 +1,15 @@
-#5673324
-#implementing Pytest framework and code to test the Card Class
+# 5673324
+# implementing Pytest framework and code to test the Card Class
 import pygame
 import pytest
 from source.card_class import CARD
-pygame.font.init() #had to initialise for pygame fonts to work
-font = pygame.font.SysFont("arialblack", 20) #declared it outside the test so it could be used
+from source.card_class import GRID
+from source.card_class import Button
+from unittest.mock import MagicMock, patch
+
+pygame.font.init()  # had to initialise for pygame fonts to work
+font = pygame.font.SysFont("arialblack", 20)  # declared it outside the test so it could be used
+font_1 = pygame.font.SysFont("arialblack", 75)
 
 #   Test for Card Initialisation
 def test_card_init():
@@ -69,5 +74,61 @@ def test_computer_grid_init():
     assert grid.y_upper_range == 200
     assert grid.y_lower_range == 800
     assert grid.color == 'BLACK'
+
+# Test for Button Initialisation
+
+def test_play_button_init():
+    mock_callback = MagicMock()
+    button = Button(
+        x=550,
+        y=500,
+        width=600,
+        height=150,
+        font_text='font_1',
+        color_text='WHITE',
+        onclick=mock_callback,
+        onepress=True,
+        alreadypressed=False,
+        fill_color={'normal': (255, 255, 255), 'on': (200, 200, 200), 'pressed': (100, 100, 100)}
+    )
+
+    assert button.x == 550
+    assert button.y == 500
+    assert button.width == 600
+    assert button.height == 150
+    assert button.font_text == 'font_1'
+    assert button.color_text == 'WHITE'
+    assert button.onclick == mock_callback
+    assert button.onepress is True
+    assert button.alreadypressed is False
+    assert button.fill_color == {
+        'normal': (255, 255, 255),
+        'on': (200, 200, 200),
+        'pressed': (100, 100, 100)
+    }
+
+
+def test_play_button_click():
+    mock_callback = MagicMock()
+    button = Button(
+        x=550,
+        y=500,
+        width=600,
+        height=150,
+        font_text='font_1',
+        color_text='WHITE',
+        onclick=mock_callback,
+        onepress=True,
+        alreadypressed=False,
+        fill_color={'normal': (255, 255, 255), 'on': (200, 200, 200), 'pressed': (100, 100, 100)}
+    )
+
+    # Simulate a mouse click inside the button's area
+    with patch('pygame.mouse.get_pos', return_value=(560, 510)), \
+         patch('pygame.mouse.get_pressed', return_value=(1, 0, 0)):
+        button.process()
+
+    mock_callback.assert_called_once()
+
 
 #5673324
