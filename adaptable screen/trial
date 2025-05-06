@@ -18,7 +18,7 @@ button_height = SCREEN_HEIGHT * 0.13
 
 
 
-game_start_sfx = pygame.mixer.Sound('ES_Game Console Select 02 - Epidemic Sound.mp3')
+game_start_sfx = pygame.mixer.Sound('game start sound.mp3')
 
 
 
