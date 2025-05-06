@@ -18,6 +18,10 @@ button_height = SCREEN_HEIGHT * 0.13
 
 
 
+game_start_sfx = pygame.mixer.Sound('ES_Game Console Select 02 - Epidemic Sound.mp3')
+
+
+
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -227,7 +231,7 @@ def gameloop(set):
         running = True
 
         while running:
-
+        
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - start_time
 
@@ -236,6 +240,7 @@ def gameloop(set):
                     pygame.quit()
 
             if elapsed_time < duration:
+                game_start_sfx.play()
                 screen.fill(BLUE)
                 pygame.draw.rect(screen, BLUE2,
                                  (SCREEN_WIDTH * 0.225, SCREEN_HEIGHT * 0.43, SCREEN_WIDTH * 0.584, SCREEN_WIDTH * .12),
