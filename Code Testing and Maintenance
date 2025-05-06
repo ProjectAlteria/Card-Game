@@ -1,9 +1,12 @@
 # 5673324
 # implementing Pytest framework and code to test the Card Class
+
 import pygame
 import pytest
+
 from source.card_class import CARD
 from source.card_class import GRID
+from source.card_class import TEXT
 from source.button_class import Button
 from unittest.mock import MagicMock, patch
 
@@ -13,8 +16,9 @@ pygame.display.set_mode((800, 600))  # we need a display window to test out the 
 font_1 = pygame.font.SysFont('arialblack', 20)  # font needs to be declared so it can be used
 
 pygame.font.init()  # had to initialise for pygame fonts to work
-font = pygame.font.SysFont("arialblack", 20)  # declared it outside the test so it could be used
+font = pygame.font.SysFont("arialblack", 150)  # declared it outside the test so it could be used
 font_1 = pygame.font.SysFont("arialblack", 75)
+YELLOW_TEXT = (255, 227, 132)
 
 #   Test for Card Initialisation
 def test_card_init():
@@ -44,6 +48,7 @@ def test_card_init():
     assert card.text_2_x == '21'
     assert card.text_2_y == '60'
     assert card.font == font
+
 
 # Test for Player Grid Initialisation
 def test_player_grid_init():
@@ -81,6 +86,20 @@ def test_computer_grid_init():
     assert grid.color == 'BLACK'
 
 
+# Test for Text Class Initialisation
+def test_text_class_init():
+    text = TEXT(
+        text='Naval Battle',
+        font=font,
+        text_color=YELLOW_TEXT,
+        x=390,
+        y=75
+    )
+    assert text.text == 'Naval Battle'
+    assert text.font == font
+    assert text.text_color == YELLOW_TEXT
+    assert text.x == 390
+    assert text.y == 75
 
 
 # Test for Play Button Initialisation
