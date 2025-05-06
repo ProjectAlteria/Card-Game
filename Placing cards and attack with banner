@@ -18,6 +18,11 @@ WINDOW_WIDTH = 1600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
+computer_score = 0
+player_turns_taken = 0
+MAX_ROUNDS = 3
+computer_attacks = []
+used_computer_targets = set()
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
@@ -26,6 +31,7 @@ decision_cards = []
 active_cards = None
 cards = []
 CARD_LENGTH = 150
+
 
 # Colors
 BLACK = (0, 0, 0)
@@ -244,6 +250,22 @@ def create_decision_cards():
     for i in range(6):
         card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
         decision_cards.append(card)
+
+# 5673749 Computer attack
+def computer_attack(player_grid_dict, player_cards, grid):
+    global computer_score
+    valid_targets = [(pos, card) for pos, card in player_grid_dict.items() if pos not in used_computer_targets]
+    if not valid_targets:
+        return
+    (x, y), card = random.choice(valid_targets)
+    used_computer_targets.add((x, y))
+    decision_card = CARD(x, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
+    computer_attacks.append(decision_card)
+    try:
+        points = int(card.text_1)
+        computer_score += points
+    except ValueError:
+        pass
 
 def game_loop():
     global shuffle_triggered, current_step, animating, cards
