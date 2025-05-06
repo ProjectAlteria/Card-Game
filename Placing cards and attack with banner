@@ -78,7 +78,7 @@ class GRID():
 
 players_grid = GRID(150, 115, 715, 200, 800, BLACK)
 computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
-player_grid_occupancy = {}
+player_grid_occupancy = {}#dictionary stores the coordinates of each grid cell currently occupied by a card (5656652)
 
 # Text Class
 class TEXT():
@@ -221,7 +221,7 @@ def animate_cards(cards, targets, step, total_steps=20):
     return cards
 
 
-# method to place cards on the grid (5656652)
+#method to place cards on the grid (5656652)
 def place_cards_in_grid(cards, grid, occupancy_dict=None):
     # choose 6 random empty grid positions
     positions = []
@@ -259,28 +259,28 @@ coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_
                      text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
 
 
-# 5656652
+#function which ensures that a card "snaps" neatly into the closest grid cell when released with the mouse. It loops over every cell in the player's grid and checks whether the center of the dragged card is inside a specific cell. (5656652)
 def snap_to_grid(card, grid):
-    # Check which cell the card is being dropped onto
-    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
-        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):
-            cell = pygame.Rect(x, y, grid.size_blocks, grid.size_blocks)
-            if cell.collidepoint(card.card_rect.center):
-                # If cell is occupied by another card, reject placement
+    #check which cell the card is being dropped onto
+    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):#loops over grid columns, stepping by the block size
+        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):#loops over grid rows, stepping by the block size
+            cell = pygame.Rect(x, y, grid.size_blocks, grid.size_blocks)#defines a rectangular area representing a single cell on the grid
+            if cell.collidepoint(card.card_rect.center):#checks if the card's center is within this grid cell
+                #if cell is occupied by another card, reject placement
                 if (x, y) in player_grid_occupancy and player_grid_occupancy[(x, y)] != card:
-                    return False  # Blocked
+                    return False
 
-                # Free previous spot (if any)
-                keys_to_remove = [k for k, v in player_grid_occupancy.items() if v == card]
-                for k in keys_to_remove:
+                #free previous spot (if any)
+                keys_to_remove = [k for k, v in player_grid_occupancy.items() if v == card]#finds any previous grid cell that this card occupied
+                for k in keys_to_remove:#removes that previous location from the grid occupancy record
                     del player_grid_occupancy[k]
 
-                # Snap to new cell and mark as occupied
-                card.x, card.y = x, y
-                card.card_rect.topleft = (x, y)
-                player_grid_occupancy[(x, y)] = card
+                #it also removes the card from any previously occupied cell. Snap to new cell and mark as occupied.
+                card.x, card.y = x, y #updates the card’s logical position to the new cell
+                card.card_rect.topleft = (x, y) #updates the card’s visual position to the new cell
+                player_grid_occupancy[(x, y)] = card #marks the new grid cell as occupied by this card
                 return True
-    return False
+    return False #no grid cell matched
 # 5656652(end)
 
 # Main loop
@@ -352,7 +352,7 @@ while run:
             if event.button == 1:
                 if active_cards is not None:
                     selected_card = cards[active_cards]
-                    # If it's a decision card
+                    #if it's a decision card
                     if selected_card.text_1 == 'X':
                         for x in range(computers_grid.x_upper_range, computers_grid.x_lower_range,
                                        computers_grid.size_blocks):
@@ -370,7 +370,7 @@ while run:
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
                     else:
-                        snap_to_grid(selected_card, players_grid)
+                        snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
                     active_cards = None
 
         if event.type == pygame.MOUSEMOTION and active_cards is not None:
