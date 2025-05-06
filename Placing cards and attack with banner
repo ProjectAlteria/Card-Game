@@ -252,7 +252,7 @@ def create_decision_cards():
 #5656652(end)
 
 # 5673749 Computer attack
-def computer_attack(player_grid_dict, player_cards, grid):
+def computer_attack(cards, grid, occupancy_dict=None):
     valid_targets = [(pos, card) for pos, card in player_grid_dict.items() if pos not in used_computer_targets]
     if not valid_targets:
         return
