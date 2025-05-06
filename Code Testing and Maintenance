@@ -4,8 +4,13 @@ import pygame
 import pytest
 from source.card_class import CARD
 from source.card_class import GRID
-from source.card_class import Button
+from source.button_class import Button
 from unittest.mock import MagicMock, patch
+
+# Initialize pygame and screen
+pygame.init()
+pygame.display.set_mode((800, 600))  # we need a display window to test out the mouse clicker event
+font_1 = pygame.font.SysFont('arialblack', 20)  # font needs to be declared so it can be used
 
 pygame.font.init()  # had to initialise for pygame fonts to work
 font = pygame.font.SysFont("arialblack", 20)  # declared it outside the test so it could be used
@@ -75,60 +80,50 @@ def test_computer_grid_init():
     assert grid.y_lower_range == 800
     assert grid.color == 'BLACK'
 
-# Test for Button Initialisation
 
+
+
+# Test for Play Button Initialisation
 def test_play_button_init():
-    mock_callback = MagicMock()
+    mock_callback = MagicMock()  # mock can be used to replace objects in the code so they can be tested without calling the full game
     button = Button(
         x=550,
         y=500,
         width=600,
         height=150,
-        font_text='font_1',
-        color_text='WHITE',
+        font_text=font_1,
+        color_text=pygame.Color('white'),
         onclick=mock_callback,
         onepress=True,
-        alreadypressed=False,
-        fill_color={'normal': (255, 255, 255), 'on': (200, 200, 200), 'pressed': (100, 100, 100)}
+        normal_color=(255, 255, 255)  # normal_color is a keyword argument and it maps to fill_color in assert
     )
 
     assert button.x == 550
     assert button.y == 500
     assert button.width == 600
     assert button.height == 150
-    assert button.font_text == 'font_1'
-    assert button.color_text == 'WHITE'
+    assert button.font_text == font_1
+    assert button.color_text == pygame.Color('white')
     assert button.onclick == mock_callback
-    assert button.onepress is True
-    assert button.alreadypressed is False
+    assert button.onepress is True  # had to be declared as 'is True' instead of '= True' because it was raising TypeErrors
+    assert button.alreadypressed is False  # had to be declared as 'is False' instead of '= False' because it was raising TypeErrors
     assert button.fill_color == {
         'normal': (255, 255, 255),
-        'on': (200, 200, 200),
-        'pressed': (100, 100, 100)
+        'on': '#000000',
+        'pressed': '#ffffff'
     }
 
-
-def test_play_button_click():
-    mock_callback = MagicMock()
-    button = Button(
-        x=550,
-        y=500,
-        width=600,
-        height=150,
-        font_text='font_1',
-        color_text='WHITE',
-        onclick=mock_callback,
-        onepress=True,
-        alreadypressed=False,
-        fill_color={'normal': (255, 255, 255), 'on': (200, 200, 200), 'pressed': (100, 100, 100)}
-    )
-
-    # Simulate a mouse click inside the button's area
-    with patch('pygame.mouse.get_pos', return_value=(560, 510)), \
-         patch('pygame.mouse.get_pressed', return_value=(1, 0, 0)):
+    # tests that the play button is pressed within the x and y parameters of the rectangle it is contained in
+    # the patch (return values= 1, 0, 0) keys with trigger events for (left, middle, right) mouse buttons so it simulates the left mouse button being clicked
+    with patch('pygame.mouse.get_pos', return_value=(550, 500)), \
+            patch('pygame.mouse.get_pressed', return_value=(1, 0, 0)):
         button.process()
-
+    # button.process() is calling the 'process' method from the source file 'button_class.py'
+    # in the Button class, def process(self) handles the mouse clicker and hover functionality
     mock_callback.assert_called_once()
+# the onclick function from the button class was mocked with MagicMock and asserted with 'mock_callback'
+# it has been tested here and called once, and it shows that the button clicker logic works
+
 
 
 #5673324
