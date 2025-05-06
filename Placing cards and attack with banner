@@ -20,10 +20,10 @@ pygame.display.set_caption('Naval Battle Drag and Drop')
 
 
 score = 0  #initialize player score
-computer_grid_occupancy = {}  #new dictionary to track computer's cards
+computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
 decision_cards_displayed = False
-decision_cards = []
+decision_cards = []#empty list, which will store decision cards in create_decision_cards function(5656652)
 active_cards = None
 cards = []
 CARD_LENGTH = 150
@@ -223,31 +223,29 @@ def animate_cards(cards, targets, step, total_steps=20):
     return cards
 
 
-#method to place cards on the grid (5656652)
+#method to place cards on the grid for computer (5656652)
 def place_cards_in_grid(cards, grid, occupancy_dict=None):
-    # choose 6 random empty grid positions
-    positions = []
-    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):
-        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):
-            positions.append((x, y))
-    random.shuffle(positions)
-    for i, card in enumerate(cards[:6]):
-        pos = positions[i]
-        card.x, card.y = pos
-        card.card_rect.topleft = pos
-        if occupancy_dict is not None:
-            occupancy_dict[pos] = card
-
+    positions = [] #empty list to hold all the valid cell positions on the grid
+    for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):#loops through all x-coordinates (columns) on the grid
+        for y in range(grid.y_upper_range, grid.y_lower_range, grid.size_blocks):#for each x, loops through all y-coordinates (rows) on the grid
+            positions.append((x, y))#adds the current grid cell's top-left position as a tuple (x, y) to the list positions
+    random.shuffle(positions)#shuffles the list of grid cell positions randomly so the card placement appears unpredictable
+    for i, card in enumerate(cards[:6]):#loops through the first 6 cards in the provided cards list. Uses enumerate to get both the index i and the card object
+        pos = positions[i] #assigns the i-th random position from the shuffled list to the variable pos
+        card.x, card.y = pos #updates the card's logical coordinates to the chosen grid position
+        card.card_rect.topleft = pos #updates the visual rectangle to the same position
+        if occupancy_dict is not None: #checks if an occupancy dictionary was provided
+            occupancy_dict[pos] = card #records that this specific grid position is now occupied by the given card in the occupancy dictionary
+#function that creates and returns a set of decision cards for player's guessing
 def create_decision_cards():
-    global decision_cards
-    spacing = 180
-    start_x = 320
-    y = 860  # inside the green deck
-    for i in range(6):
-        card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
-        decision_cards.append(card)
-
-
+    global decision_cards #it refers to a variable defined outside the function. This allows the function to modify the global list rather than a local copy
+    spacing = 180 #sets the horizontal space between cards
+    start_x = 320 #sets the starting x-coordinate for the first card
+    y = 860  #place inside the green deck
+    for i in range(6): #loops allowing to create and add six decision cards
+        card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)#card design
+        decision_cards.append(card) #adds cards to the global decision_cards list
+#5656652(end)
 
 def game_loop():
     global shuffle_triggered, current_step, animating, cards
@@ -262,8 +260,7 @@ grids = [players_grid, computers_grid]
 coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
                      text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
 
-
-#function which ensures that a card "snaps" neatly into the closest grid cell when released with the mouse. It loops over every cell in the player's grid and checks whether the center of the dragged card is inside a specific cell. (5656652)
+#function to place cards on the grid for player. It ensures that a card "snaps" neatly into the closest grid cell when released with the mouse. It loops over every cell in the player's grid and checks whether the center of the dragged card is inside a specific cell. (5656652)
 def snap_to_grid(card, grid):
     #check which cell the card is being dropped onto
     for x in range(grid.x_upper_range, grid.x_lower_range, grid.size_blocks):#loops over grid columns, stepping by the block size
@@ -356,25 +353,25 @@ while run:
             if event.button == 1:
                 if active_cards is not None:
                     selected_card = cards[active_cards]
-                    #if it's a decision card
+                    #if it's a decision card(5656652)
                     if selected_card.text_1 == 'X':
                         for x in range(computers_grid.x_upper_range, computers_grid.x_lower_range,
-                                       computers_grid.size_blocks):
+                                       computers_grid.size_blocks): #begins iterating over the x-coordinates of the computer’s grid, stepping by the size of each grid block
                             for y in range(computers_grid.y_upper_range, computers_grid.y_lower_range,
-                                           computers_grid.size_blocks):
-                                cell = pygame.Rect(x, y, computers_grid.size_blocks, computers_grid.size_blocks)
-                                if cell.collidepoint(selected_card.card_rect.center):
-                                    if (x, y) in computer_grid_occupancy:
-                                        # HIT!
-                                        hit_card = computer_grid_occupancy[(x, y)]
-                                        hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks())
-                                        del computer_grid_occupancy[(x, y)]
-                                        score += int(hit_card.text_1)
-                                    #snap decision card anyway
+                                           computers_grid.size_blocks): #iterates over the y-coordinates of the grid, again stepping block by block. Combined with the x-loop, this covers every cell of the computer's grid
+                                cell = pygame.Rect(x, y, computers_grid.size_blocks, computers_grid.size_blocks)#defines a rectangle (cell) for the current grid cell. Each cell is a square
+                                if cell.collidepoint(selected_card.card_rect.center):#checks if the center of the released decision card lies within this grid cell. This determines which cell the card was dropped on
+                                    if (x, y) in computer_grid_occupancy:#checks if the grid cell contains an enemy unit (i.e., it’s occupied). computer_grid_occupancy is a dictionary mapping cell coordinates to unit cards
+                                        #if it is a hit
+                                        hit_card = computer_grid_occupancy[(x, y)] #retrieves the card (target) located at that grid cell
+                                        hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks())#Stores data related to the hit, including the unit's name (text_2), value or strength (text_1), and the current time. This used for displaying a hit message
+                                        score += int(hit_card.text_1) #increases the player's score based on the value (text_1) of the destroyed unit
+                                    #snap decision card anyway. Regardless of whether it was a hit or not, the decision card is snapped to the grid cell where it was dropped. This visually places the card in that spot
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
+                    #5656652(end)
                     active_cards = None
 
         if event.type == pygame.MOUSEMOTION and active_cards is not None:
