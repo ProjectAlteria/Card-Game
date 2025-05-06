@@ -26,6 +26,7 @@ used_computer_targets = set()
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
+miss_banner_data = None  #tuple to store miss info: (message, time)
 decision_cards_displayed = False
 decision_cards = []#empty list, which will store decision cards in create_decision_cards function(5656652)
 active_cards = None
@@ -341,6 +342,20 @@ while run:
         else:
             hit_banner_data = None
 
+    if miss_banner_data:
+        message, start_time = miss_banner_data
+        if pygame.time.get_ticks() - start_time < 2000:  # Show the banner for 2 seconds
+            banner_rect = pygame.Rect(350, 400, 1000, 150)
+            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
+            pygame.draw.rect(screen, WHITE, banner_rect, 10)
+
+            miss_text = f'{message}'  #display "MISS"
+            text_surface = font_3.render(miss_text, True, (255, 227, 132))  # Yellow text
+            text_rect = text_surface.get_rect(center=banner_rect.center)
+            screen.blit(text_surface, text_rect)
+        else:
+            miss_banner_data = None  # Hide the miss banner after 2 seconds
+
     # Animation step
     if animating and current_step < 20:
         animate_cards(cards, shuffle_targets, current_step)
@@ -382,14 +397,19 @@ while run:
                                         hit_card = computer_grid_occupancy[(x, y)] #retrieves the card (target) located at that grid cell
                                         hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks())#Stores data related to the hit, including the unit's name (text_2), value or strength (text_1), and the current time. This used for displaying a hit message
                                         score += int(hit_card.text_1) #increases the player's score based on the value (text_1) of the destroyed unit
-                                    #snap decision card anyway. Regardless of whether it was a hit or not, the decision card is snapped to the grid cell where it was dropped. This visually places the card in that spot
+                                    else:  #if the cell is empty, it's a miss
+                                        miss_banner_data = ("MISS", pygame.time.get_ticks())  # Display miss banner
+
+                                        #snap decision card to the grid cell
+                                    selected_card.x, selected_card.y = x, y
+                                    selected_card.card_rect.topleft = (x, y)
+                
                                          #5673749 adding computer points
                                         comp_hit = player_grid_occupancy[(x, y)]
                                         comp_hit_banner_data = (comp_hit.text_2, comp_hit.text_1, pygame.time.get_ticks())
                                         del player_grid_occupancy[(x, y)]
                                         points += int(comp_hit.text_1)
-                                    selected_card.x, selected_card.y = x, y
-                                    selected_card.card_rect.topleft = (x, y)
+                                  
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
                     #5656652(end)
