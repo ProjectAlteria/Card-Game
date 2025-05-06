@@ -17,9 +17,7 @@ button_width = SCREEN_WIDTH * 0.34
 button_height = SCREEN_HEIGHT * 0.13
 
 
-start_time = pygame.time.get_ticks()
-duration = 8000
-duration_1 = 2000
+
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -249,6 +247,9 @@ def gameloop(set):
 
             if elapsed_time > duration:
 
+                current_time_1 = pygame.time.get_ticks()
+                duration_1 = 8000
+
                 screen.fill(BLUE)
                 x_button = Button(SCREEN_WIDTH * 0.945, SCREEN_HEIGHT * 0, SCREEN_WIDTH * 0.0625, SCREEN_WIDTH * 0.0625,
                               font_1, WHITE, 'X',
@@ -265,9 +266,10 @@ def gameloop(set):
                 for co in coordinates_texts:
                     co.text_objects()
 
-            #if elapsed_time + duration_1 < duration:
-                #pygame.draw.rect(screen, BLACK,
-                                 #(SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * .12, SCREEN_WIDTH * 0.45, SCREEN_WIDTH * 0.45))
+            
+                if current_time_1 < duration_1:
+                    pygame.draw.rect(screen, BLACK,
+                                (SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * .12, SCREEN_WIDTH * 0.45, SCREEN_WIDTH * 0.45))
 
                 for c in cards:
                     c.show()
