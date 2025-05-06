@@ -18,11 +18,7 @@ WINDOW_WIDTH = 1600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
-points = 0 #computers point but still represented as score
-player_turns_taken = 0 #number of player turns to indicate computers turn
-MAX_ROUNDS = 3 # max rounds
-computer_attacks = [] 
-used_computer_targets = set()
+
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
@@ -252,15 +248,7 @@ def create_decision_cards():
         decision_cards.append(card) #adds cards to the global decision_cards list
 #5656652(end)
 
-# 5673749 Computer attack
-def computer_attack(cards, grid, occupancy_dict=None):
-    valid_targets = [(pos, card) for pos, card in player_grid_dict.items() if pos not in used_computer_targets]
-    if not valid_targets:
-        return
-    (x, y), card = random.choice(valid_targets)
-    used_computer_targets.add((x, y))
-    decision_card = CARD(x, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
-    computer_attacks.append(decision_card)
+
 
 def game_loop():
     global shuffle_triggered, current_step, animating, cards
@@ -311,10 +299,8 @@ while run:
     for c in coordinates_texts:
         c.text_objects()
 
-    score_display = font_1.render(f"Score: {score}", True, BLACK)
-    computer_score_display = font_1.render(f"Score: {points}", True, BLACK)
+    score_display = font_1.render(f"Score: {score}", True, BLACK)    
     screen.blit(score_display, (20, 20))
-    screen.blit(computer_score_display, (880, 1580))
     #show only player cards and decision cards
     for c in cards[:6]:  #first 6 are player cards
         c.show()
@@ -403,13 +389,6 @@ while run:
                                         #snap decision card to the grid cell
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
-                
-                                         #5673749 adding computer points
-                                        comp_hit = player_grid_occupancy[(x, y)]
-                                        comp_hit_banner_data = (comp_hit.text_2, comp_hit.text_1, pygame.time.get_ticks())
-                                        del player_grid_occupancy[(x, y)]
-                                        points += int(comp_hit.text_1)
-                                  
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
                     #5656652(end)
