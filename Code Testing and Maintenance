@@ -114,7 +114,7 @@ def test_play_button_init():
         color_text=pygame.Color('white'),
         onclick=mock_callback,
         onepress=True,
-        normal_color=(255, 255, 255)  # normal_color is a keyword argument and it maps to fill_color in assert
+        normal_color=(65, 154, 80)  # normal_color is a keyword argument and it maps to fill_color in assert
     )
 
     assert button.x == 550
@@ -127,7 +127,7 @@ def test_play_button_init():
     assert button.onepress is True  # had to be declared as 'is True' instead of '= True' because it was raising TypeErrors
     assert button.alreadypressed is False  # had to be declared as 'is False' instead of '= False' because it was raising TypeErrors
     assert button.fill_color == {
-        'normal': (255, 255, 255),
+        'normal': (65, 154, 80),
         'on': '#000000',
         'pressed': '#ffffff'
     }
@@ -142,6 +142,39 @@ def test_play_button_init():
     mock_callback.assert_called_once()
 # the onclick function from the button class was mocked with MagicMock and asserted with 'mock_callback'
 # it has been tested here and called once, and it shows that the button clicker logic works
+
+
+# Test for Exit Button Initialisation
+def test_exit_button_init():
+    dummy_callback = MagicMock()
+    button = Button(
+        x=550,
+        y=900,
+        width=600,
+        height=150,
+        font_text=font_1,
+        color_text=pygame.Color('white'),
+        onclick=dummy_callback,
+        onepress=False,
+        normal_color=(182, 78, 67)
+    )
+    assert button.x == 550
+    assert button.y == 900
+    assert button.width == 600
+    assert button.height == 150
+    assert button.font_text == font_1
+    assert button.color_text == pygame.Color('white')
+    assert button.onclick == dummy_callback
+    assert button.onepress is False
+    assert button.fill_color == {
+        'normal': (182, 78, 67),
+        'on': '#000000',
+        'pressed': '#ffffff'
+    }
+    with patch('pygame.mouse.get_pos', return_value=(550, 900)), \
+            patch('pygame.mouse.get_pressed', return_value=(1, 0, 0)):
+        button.process()
+    dummy_callback.assert_called_once()
 
 
 
