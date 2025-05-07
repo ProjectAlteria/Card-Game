@@ -18,7 +18,8 @@ WINDOW_WIDTH = 1600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
-
+computer_attack_cells = set()
+Cscore = 0 #initialize computer score(5673749)
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
@@ -301,6 +302,10 @@ while run:
 
     score_display = font_1.render(f"Score: {score}", True, BLACK)    
     screen.blit(score_display, (20, 20))
+    #5673749 computer additions
+    Cscore_display = font_1.render(f"Score: {Cscore}", True, BLACK)
+    screen.blit(Cscore_display, (880, 1580))
+
     #show only player cards and decision cards
     for c in cards[:6]:  #first 6 are player cards
         c.show()
@@ -389,6 +394,32 @@ while run:
                                         #snap decision card to the grid cell
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
+
+
+                                    #Computer attack 5673749
+                                    while True:
+                                        cx = random.randrange(players_grid.x_upper_range, players_grid.x_lower_range, players_grid.size_blocks)
+                                        cy = random.randrange(players_grid.y_upper_range, players_grid.y_lower_range, players_grid.size_blocks)
+                                        if (cx, cy) not in computer_attack_cells:
+                                            # Mark this tile as attacked so it won't be repeated
+                                            computer_attack_cells.add((cx, cy))
+                                            Ccard = CARD(cx, cy, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0,
+                                                         0, font_2)
+
+                                            Ccard.x, Ccard.y = cx, cy
+                                            Ccard.card_rect.topleft = (cx, cy)
+                                            cards.append(Ccard)
+
+                                            if (cx, cy) in player_grid_occupancy:
+                                                Chit_card = player_grid_occupancy[(cx, cy)]
+                                                hit_banner_data = (Chit_card.text_2, Chit_card.text_1, pygame.time.get_ticks())
+                                                Cscore += int(Chit_card.text_1)
+
+                                            else:
+                                                miss_banner_data = ("MISS", pygame.time.get_ticks())
+                                            break
+                                            #computer attack ends
+                                
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
                     #5656652(end)
