@@ -401,29 +401,41 @@ while run:
                                     selected_card.card_rect.topleft = (x, y)
 
 
-                                    #Computer attack 5673749
+                                    # Computer attack 5673749
                                     while True:
-                                        cx = random.randrange(players_grid.x_upper_range, players_grid.x_lower_range, players_grid.size_blocks)
-                                        cy = random.randrange(players_grid.y_upper_range, players_grid.y_lower_range, players_grid.size_blocks)
-                                        if (cx, cy) not in computer_attack_cells:
-                                            # Mark this tile as attacked so it won't be repeated
-                                            computer_attack_cells.add((cx, cy))
-                                            Ccard = CARD(cx, cy, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0,
-                                                         0, font_2)
+                                        cx = random.randrange(players_grid.x_upper_range, players_grid.x_lower_range,
+                                                              players_grid.size_blocks)
+                                        cy = random.randrange(players_grid.y_upper_range, players_grid.y_lower_range,
+                                                              players_grid.size_blocks)
 
+                                        if (cx, cy) not in computer_attack_cells:
+                                            computer_attack_cells.add((cx, cy))
+
+                                            if (cx, cy) in player_grid_occupancy:
+                                                # Player's card is hit
+                                                Chit_card = player_grid_occupancy[(cx, cy)]
+                                                hit_banner_data = (
+                                                Chit_card.text_2, Chit_card.text_1, pygame.time.get_ticks())
+                                                Cscore += int(Chit_card.text_1)
+
+                                                # Remove player's ship from grid and visual list
+                                                del player_grid_occupancy[(cx, cy)]
+                                                if Chit_card in cards:
+                                                    cards.remove(Chit_card)
+
+                                            else:
+                                                # It's a miss
+                                                miss_banner_data = ("MISS", pygame.time.get_ticks())
+
+                                            # Place the red X decision card on the attacked cell
+                                            Ccard = CARD(cx, cy, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30,
+                                                         0, 0, font_2)
                                             Ccard.x, Ccard.y = cx, cy
                                             Ccard.card_rect.topleft = (cx, cy)
                                             cards.append(Ccard)
 
-                                            if (cx, cy) in player_grid_occupancy:
-                                                Chit_card = player_grid_occupancy[(cx, cy)]
-                                                hit_banner_data = (Chit_card.text_2, Chit_card.text_1, pygame.time.get_ticks())
-                                                Cscore += int(Chit_card.text_1)
-
-                                            else:
-                                                miss_banner_data = ("MISS", pygame.time.get_ticks())
                                             break
-                                            #computer attack ends
+                                    # computer attack ends
                                 
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
