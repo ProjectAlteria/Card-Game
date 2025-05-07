@@ -18,8 +18,11 @@ WINDOW_WIDTH = 1600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
+#5673749 next 4 lines for computer variables
 computer_attack_cells = set()
-Cscore = 0 #initialize computer score(5673749)
+Cscore = 0
+computer_hit_banner_data = None
+computer_miss_banner_data = None
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
@@ -351,6 +354,33 @@ while run:
             screen.blit(text_surface, text_rect)
         else:
             miss_banner_data = None  # Hide the miss banner after 2 seconds
+        # 5673749 starts here for computer banner data additions
+    if computer_hit_banner_data:
+        card_name, points, start_time = computer_hit_banner_data
+        if pygame.time.get_ticks() - start_time < 2000:
+            banner_rect = pygame.Rect(350, 570, 1000, 150)
+            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
+            pygame.draw.rect(screen, WHITE, banner_rect, 10)
+            hit_text = f'COMPUTER HIT: {card_name} ({points} pts)'
+            text_surface = font_3.render(hit_text, True, (255, 100, 100))
+            text_rect = text_surface.get_rect(center=banner_rect.center)
+            screen.blit(text_surface, text_rect)
+        else:
+            computer_hit_banner_data = None
+
+    if computer_miss_banner_data:
+        message, start_time = computer_miss_banner_data
+        if pygame.time.get_ticks() - start_time < 2000:
+            banner_rect = pygame.Rect(350, 570, 1000, 150)
+            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
+            pygame.draw.rect(screen, WHITE, banner_rect, 10)
+            miss_text = f'COMPUTER {message}'
+            text_surface = font_3.render(miss_text, True, (255, 100, 100))
+            text_rect = text_surface.get_rect(center=banner_rect.center)
+            screen.blit(text_surface, text_rect)
+        else:
+            computer_miss_banner_data = None
+    #5673749 ends here for computer banner data additions
 
     # Animation step
     if animating and current_step < 20:
@@ -399,7 +429,7 @@ while run:
                                         #snap decision card to the grid cell
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
-
+                                    pygame.time.delay(2000)  # 5673749 Pause for 2 second so player can see the result
 
                                     # Computer attack 5673749
                                     while True:
@@ -414,7 +444,7 @@ while run:
                                             if (cx, cy) in player_grid_occupancy:
                                                 # Player's card is hit
                                                 Chit_card = player_grid_occupancy[(cx, cy)]
-                                                hit_banner_data = (
+                                                computer_hit_banner_data = (
                                                 Chit_card.text_2, Chit_card.text_1, pygame.time.get_ticks())
                                                 Cscore += int(Chit_card.text_1)
 
@@ -425,7 +455,7 @@ while run:
 
                                             else:
                                                 # It's a miss
-                                                miss_banner_data = ("MISS", pygame.time.get_ticks())
+                                                computer_miss_banner_data = ("MISS", pygame.time.get_ticks())
 
                                             # Place the red X decision card on the attacked cell
                                             Ccard = CARD(cx, cy, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30,
