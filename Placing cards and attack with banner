@@ -304,13 +304,18 @@ while run:
     screen.blit(score_display, (20, 20))
     #5673749 computer additions
     Cscore_display = font_1.render(f"Score: {Cscore}", True, BLACK)
-    screen.blit(Cscore_display, (880, 1580))
+    screen.blit(Cscore_display, (1400, 20))
 
     #show only player cards and decision cards
     for c in cards[:6]:  #first 6 are player cards
         c.show()
     for dc in decision_cards:
         dc.show()
+
+    #5673749 addition for computer decision cards display
+    for c in cards[6:]:
+        if c.text_1 == 'X':
+            c.show()
 
     if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
         create_decision_cards()
