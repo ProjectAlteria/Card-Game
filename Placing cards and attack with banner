@@ -357,11 +357,11 @@ while run:
     if computer_hit_banner_data:
         card_name, points, start_time = computer_hit_banner_data
         if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1000, 150)
+            banner_rect = pygame.Rect(350, 570, 1400, 180)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
             hit_text = f'COMPUTER HIT: {card_name} ({points} pts)'
-            text_surface = font_3.render(hit_text, True, (255, 100, 100))
+            text_surface = font_3.render(hit_text, True, (255, 227, 132))
             text_rect = text_surface.get_rect(center=banner_rect.center)
             screen.blit(text_surface, text_rect)
         else:
@@ -370,11 +370,11 @@ while run:
     if computer_miss_banner_data:
         message, start_time = computer_miss_banner_data
         if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1000, 150)
+            banner_rect = pygame.Rect(350, 570, 1400, 180)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
             miss_text = f'COMPUTER {message}'
-            text_surface = font_3.render(miss_text, True, (255, 100, 100))
+            text_surface = font_3.render(miss_text, True, (255, 227, 132))
             text_rect = text_surface.get_rect(center=banner_rect.center)
             screen.blit(text_surface, text_rect)
         else:
