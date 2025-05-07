@@ -428,6 +428,9 @@ while run:
                                         #snap decision card to the grid cell
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
+
+                                    
+                                    pygame.display.flip()  # 5673749 Show player's hit/miss result now
                                     pygame.time.delay(2000)  # 5673749 Pause for 2 second so player can see the result
 
                                     # Computer attack 5673749
