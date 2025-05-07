@@ -324,8 +324,7 @@ while run:
         create_decision_cards()
         decision_cards_displayed = True
 
-    for dc in decision_cards:
-        dc.show()
+    # i removed a second instnace of line 315&316 that was here. It was redundant and causing issues 5673749
 
     if hit_banner_data:
         card_name, points, start_time = hit_banner_data
