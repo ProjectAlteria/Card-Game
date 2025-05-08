@@ -506,12 +506,12 @@ def play():
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
 
+                                    pygame.display.flip()  # 5673749 Show player's hit/miss result now
+                                    pygame.time.delay(1500)  # 5673749 Pause for 1.5 seconds so player can see the result
+
                                     # Now clear the globals so the banner disappears
                                     hit_banner_data = None
                                     miss_banner_data = None
-
-                                    pygame.display.flip()  # 5673749 Show player's hit/miss result now
-                                    pygame.time.delay(1500)  # 5673749 Pause for 1.5 seconds so player can see the result
 
                                     # Computer attack 5673749
                                     while True:
