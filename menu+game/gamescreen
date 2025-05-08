@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 hit_sound = pygame.mixer.Sound('hit.mp3')
 not_hit_sound = pygame.mixer.Sound('not hit.mp3')
 
-# 5673749 next 4 lines for computer variables
+# 5673749 next 4 lines to set global variables for computer 
 computer_attack_cells = set()
 Cscore = 0
 computer_hit_banner_data = None
@@ -359,7 +359,7 @@ def play():
 
     score_display = font_1.render(f"Score: {score}", True, BLACK)
     screen.blit(score_display, (20, 20))
-    # 5673749 computer additions
+    # 5673749 displays computers score at top right
     Cscore_display = font_1.render(f"Score: {Cscore}", True, BLACK)
     screen.blit(Cscore_display, (1400, 20))
     banner_1 = pygame.time.get_ticks()
@@ -377,16 +377,14 @@ def play():
 
         pygame.draw.rect(screen, BLACK, (225, 400, 1250, 150), 4)
         explaination_1.text_objects()
-    # show only player cards and decision cards
-    for c in cards[:6]:  # first 6 are player cards
+    
+   # 5673749 Show only cards that are not computer ships - edited to prevent computers ships from showing 
+for c in cards:
+    if c in player_grid_occupancy.values():
         c.show()
-    for dc in decision_cards:
-        dc.show()
+    elif c.text_1 == 'X':
+        c.show()
 
-    # 5673749 addition for computer decision cards display
-    for c in cards[6:]:
-        if c.text_1 == 'X':
-            c.show()
 
     if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
         create_decision_cards()
@@ -426,15 +424,15 @@ def play():
             miss_banner_data = None
 
             # Hide the miss banner after 2 seconds
-        # 5673749 starts here for computer banner data additions
+        # 5673749 starts here for computer banner data - basically just shows the banner info if computer hits or misses
     if computer_hit_banner_data:
         card_name, points, start_time = computer_hit_banner_data
         if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1400, 180)
-            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
+            banner_rect = pygame.Rect(350, 570, 1400, 180) #rectangle dimensions
+            pygame.draw.rect(screen, (121, 85, 38), banner_rect) 
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
-            hit_text = f'COMPUTER HIT: {card_name} ({points} pts)'
-            text_surface = font_3.render(hit_text, True, (255, 227, 132))
+            hit_text = f'COMPUTER HIT: {card_name} ({points} pts)' # displays the info
+            text_surface = font_3.render(hit_text, True, (255, 227, 132)) # the banner text's color
             text_rect = text_surface.get_rect(center=banner_rect.center)
             screen.blit(text_surface, text_rect)
         else:
@@ -443,11 +441,11 @@ def play():
     if computer_miss_banner_data:
         message, start_time = computer_miss_banner_data
         if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1400, 180)
+            banner_rect = pygame.Rect(350, 570, 1400, 180) #rectangle dimensions
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
-            miss_text = f'COMPUTER {message}'
-            text_surface = font_3.render(miss_text, True, (255, 227, 132))
+            miss_text = f'COMPUTER {message}' # displays the info
+            text_surface = font_3.render(miss_text, True, (255, 227, 132)) # the banner text's color to match the others.
             text_rect = text_surface.get_rect(center=banner_rect.center)
             screen.blit(text_surface, text_rect)
         else:
@@ -509,7 +507,7 @@ def play():
                                     selected_card.card_rect.topleft = (x, y)
 
                                     pygame.display.flip()  # 5673749 Show player's hit/miss result now
-                                    pygame.time.delay(2000)  # 5673749 Pause for 2 second so player can see the result
+                                    pygame.time.delay(1500)  # 5673749 Pause for 1.5 seconds so player can see the result
 
                                     # Computer attack 5673749
                                     while True:
@@ -518,7 +516,7 @@ def play():
                                         cy = random.randrange(players_grid.y_upper_range, players_grid.y_lower_range,
                                                               players_grid.size_blocks)
 
-                                        if (cx, cy) not in computer_attack_cells:
+                                        if (cx, cy) not in computer_attack_cells: # appends chosen places to prevent being attacked again
                                             computer_attack_cells.add((cx, cy))
 
                                             if (cx, cy) in player_grid_occupancy:
