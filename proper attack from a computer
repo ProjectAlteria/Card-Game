@@ -32,7 +32,9 @@ player_cards = []
 computer_cards = []
 attacked_cells = []  #tracks where the computer has already attacked
 CARD_LENGTH = 150
-
+#5677161 sound effects
+hit_sound = pygame.mixer.Sound('hit.mp3')
+not_hit_sound = pygame.mixer.Sound('not hit.mp3')
 
 # Colors
 BLACK = (0, 0, 0)
@@ -318,6 +320,7 @@ def computer_attack():
         cards.remove(target_card)
 
         hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
+        hit_sound.play()  # 5677161 playing the sound
         enemy_score += points
     else:
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
@@ -355,7 +358,8 @@ while run:
 
     if hit_banner_data:
         card_name, points, start_time = hit_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:  # show for 2 seconds
+        if pygame.time.get_ticks() - start_time < 3000:  # show for 2 seconds-->5677161 changed to three seconds for the sound effect to work better
+            hit_sound.play()  # 5677161 playing the sound
             banner_rect = pygame.Rect(350, 400, 1000, 150)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)  # BROWN background
             pygame.draw.rect(screen, WHITE, banner_rect, 10)  # White thick border
@@ -368,7 +372,8 @@ while run:
             hit_banner_data = None
     if miss_banner_data:
         message, start_time = miss_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:  # Show the banner for 2 seconds
+        if pygame.time.get_ticks() - start_time < 3000:  # Show the banner for 2 seconds-->5677161 changed to three seconds for the sound effect to work better
+            not_hit_sound.play()  # 5677161 playing sound
             banner_rect = pygame.Rect(350, 400, 1000, 150)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
@@ -381,7 +386,7 @@ while run:
             miss_banner_data = None  # Hide the miss banner after 2 seconds
 
     if turn == "computer" and not hit_banner_data and not miss_banner_data:
-        pygame.time.delay(500)  # optional: delay for dramatic effect
+        pygame.time.delay(700)  # optional: delay for dramatic effect-->5677161 changed to 700 milli seconds for the sound effect to work better
         computer_attack()
         turn = "player"
 
