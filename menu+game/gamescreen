@@ -379,11 +379,11 @@ def play():
         explaination_1.text_objects()
     
    # 5673749 Show only cards that are not computer ships - edited to prevent computers ships from showing 
-for c in cards:
-    if c in player_grid_occupancy.values():
-        c.show()
-    elif c.text_1 == 'X':
-        c.show()
+    for c in cards:
+        if c in player_grid_occupancy.values():
+            c.show()
+        elif c.text_1 == 'X':
+            c.show()
 
 
     if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
