@@ -344,7 +344,7 @@ while run:
     for c in coordinates_texts:
         c.text_objects()
 
-    score_display = font_1.render(f"Score: {score}", True, BLACK)    
+    score_display = font_1.render(f"Your score: {score}", True, BLACK)    
     screen.blit(score_display, (20, 20))
     #5673749 computer additions
     Cscore_display = font_1.render(f"Enemy score: {computer_score}", True, BLACK)
