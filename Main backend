@@ -18,11 +18,9 @@ WINDOW_WIDTH = 1600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption('Naval Battle Drag and Drop')
 
-#5673749 next 4 lines for computer variables
-computer_attack_cells = set()
-Cscore = 0
-computer_hit_banner_data = None
-computer_miss_banner_data = None
+ 
+computer_score = 0 #5673749
+turn = "player" #5673749
 score = 0  #initialize player score
 computer_grid_occupancy = {}  #new dictionary to track computer's cards(5656652)
 hit_banner_data = None  #tuple to store hit info: (card_name, points, time)
@@ -31,8 +29,13 @@ decision_cards_displayed = False
 decision_cards = []#empty list, which will store decision cards in create_decision_cards function(5656652)
 active_cards = None
 cards = []
+player_cards = []
+computer_cards = []
+attacked_cells = []  #tracks where the computer has already attacked
 CARD_LENGTH = 150
-
+#5677161 sound effects
+hit_sound = pygame.mixer.Sound('hit.mp3')
+not_hit_sound = pygame.mixer.Sound('not hit.mp3')
 
 # Colors
 BLACK = (0, 0, 0)
@@ -144,6 +147,11 @@ class CARD():
         self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
         self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
         cards.append(self)
+        #5656652 division of cards into player's and computers's
+        if owner == "player":
+            player_cards.append(self)
+        elif owner == "computer":
+            computer_cards.append(self)
 
     def show(self):
         self.card_surface_1.fill(self.color)
@@ -241,6 +249,7 @@ def place_cards_in_grid(cards, grid, occupancy_dict=None):
         card.card_rect.topleft = pos #updates the visual rectangle to the same position
         if occupancy_dict is not None: #checks if an occupancy dictionary was provided
             occupancy_dict[pos] = card #records that this specific grid position is now occupied by the given card in the occupancy dictionary
+
 #function that creates and returns a set of decision cards for player's guessing
 def create_decision_cards():
     global decision_cards #it refers to a variable defined outside the function. This allows the function to modify the global list rather than a local copy
@@ -289,7 +298,39 @@ def snap_to_grid(card, grid):
                 player_grid_occupancy[(x, y)] = card #marks the new grid cell as occupied by this card
                 return True
     return False #no grid cell matched
+
+def computer_attack():
+    global score, hit_banner_data, miss_banner_data, enemy_score, attacked_cells
+
+    all_cells = [(x, y) for x in range(players_grid.x_upper_range, players_grid.x_lower_range, players_grid.size_blocks)
+                       for y in range(players_grid.y_upper_range, players_grid.y_lower_range, players_grid.size_blocks)]
+    available_cells = [cell for cell in all_cells if cell not in attacked_cells]
+
+    if not available_cells:
+        return  #all cells attacked
+
+    target = random.choice(available_cells)
+    attacked_cells.append(target)
+
+    #add a decision card at the attacked cell visually
+    decision_card = CARD(target[0], target[1], CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
+    decision_cards.append(decision_card)
+
+    if target in player_grid_occupancy:
+        target_card = player_grid_occupancy[target]
+        points = int(target_card.text_1)
+
+        del player_grid_occupancy[target]
+        cards.remove(target_card)
+
+        hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
+        hit_sound.play()  # 5677161 playing the sound
+        enemy_score += points
+    else:
+        miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
 # 5656652(end)
+
+
 
 # Main loop
 run = True
@@ -306,29 +347,26 @@ while run:
     score_display = font_1.render(f"Score: {score}", True, BLACK)    
     screen.blit(score_display, (20, 20))
     #5673749 computer additions
-    Cscore_display = font_1.render(f"Score: {Cscore}", True, BLACK)
-    screen.blit(Cscore_display, (1400, 20))
+    Cscore_display = font_1.render(f"Enemy score: {computer_score}", True, BLACK)
+    screen.blit(Cscore_display, (WINDOW_WIDTH - Cscore_display.get_width() - 20, 20) )
 
-    #show only player cards and decision cards
-    for c in cards[:6]:  #first 6 are player cards
+    for c in player_cards:
         c.show()
+
     for dc in decision_cards:
         dc.show()
-
-    #5673749 addition for computer decision cards display
-    for c in cards[6:]:
-        if c.text_1 == 'X':
-            c.show()
 
     if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
         create_decision_cards()
         decision_cards_displayed = True
 
-    # i removed a second instnace of line 315&316 that was here. It was redundant and causing issues 5673749
+    for dc in decision_cards:
+        dc.show()
 
     if hit_banner_data:
         card_name, points, start_time = hit_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:  # show for 2 seconds
+        if pygame.time.get_ticks() - start_time < 3000:  # show for 2 seconds-->5677161 changed to three seconds for the sound effect to work better
+            hit_sound.play()  # 5677161 playing the sound
             banner_rect = pygame.Rect(350, 400, 1000, 150)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)  # BROWN background
             pygame.draw.rect(screen, WHITE, banner_rect, 10)  # White thick border
@@ -342,7 +380,8 @@ while run:
 
     if miss_banner_data:
         message, start_time = miss_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:  # Show the banner for 2 seconds
+        if pygame.time.get_ticks() - start_time < 3000:  # Show the banner for 2 seconds-->5677161 changed to three seconds for the sound effect to work better
+            not_hit_sound.play()  # 5677161 playing sound
             banner_rect = pygame.Rect(350, 400, 1000, 150)
             pygame.draw.rect(screen, (121, 85, 38), banner_rect)
             pygame.draw.rect(screen, WHITE, banner_rect, 10)
@@ -353,33 +392,12 @@ while run:
             screen.blit(text_surface, text_rect)
         else:
             miss_banner_data = None  # Hide the miss banner after 2 seconds
-        # 5673749 starts here for computer banner data additions
-    if computer_hit_banner_data:
-        card_name, points, start_time = computer_hit_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1400, 180)
-            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
-            pygame.draw.rect(screen, WHITE, banner_rect, 10)
-            hit_text = f'COMPUTER HIT: {card_name} ({points} pts)'
-            text_surface = font_3.render(hit_text, True, (255, 227, 132))
-            text_rect = text_surface.get_rect(center=banner_rect.center)
-            screen.blit(text_surface, text_rect)
-        else:
-            computer_hit_banner_data = None
-
-    if computer_miss_banner_data:
-        message, start_time = computer_miss_banner_data
-        if pygame.time.get_ticks() - start_time < 2000:
-            banner_rect = pygame.Rect(350, 570, 1400, 180)
-            pygame.draw.rect(screen, (121, 85, 38), banner_rect)
-            pygame.draw.rect(screen, WHITE, banner_rect, 10)
-            miss_text = f'COMPUTER {message}'
-            text_surface = font_3.render(miss_text, True, (255, 227, 132))
-            text_rect = text_surface.get_rect(center=banner_rect.center)
-            screen.blit(text_surface, text_rect)
-        else:
-            computer_miss_banner_data = None
-    #5673749 ends here for computer banner data additions
+        # 5673749
+    if turn == "computer" and not hit_banner_data and not miss_banner_data:
+        pygame.time.delay(700)  # optional: delay for dramatic effect-->5677161 changed to 700 milli seconds for the sound effect to work better
+        computer_attack()
+        turn = "player"
+    #5673749 ends here for computer banner data
 
     # Animation step
     if animating and current_step < 20:
@@ -424,50 +442,10 @@ while run:
                                         score += int(hit_card.text_1) #increases the player's score based on the value (text_1) of the destroyed unit
                                     else:  #if the cell is empty, it's a miss
                                         miss_banner_data = ("MISS", pygame.time.get_ticks())  # Display miss banner
-
+                                    turn = "computer" #-5673749
                                         #snap decision card to the grid cell
                                     selected_card.x, selected_card.y = x, y
                                     selected_card.card_rect.topleft = (x, y)
-
-                                    
-                                    pygame.display.flip()  # 5673749 Show player's hit/miss result now
-                                    pygame.time.delay(2000)  # 5673749 Pause for 2 second so player can see the result
-
-                                    # Computer attack 5673749
-                                    while True:
-                                        cx = random.randrange(players_grid.x_upper_range, players_grid.x_lower_range,
-                                                              players_grid.size_blocks)
-                                        cy = random.randrange(players_grid.y_upper_range, players_grid.y_lower_range,
-                                                              players_grid.size_blocks)
-
-                                        if (cx, cy) not in computer_attack_cells:
-                                            computer_attack_cells.add((cx, cy))
-
-                                            if (cx, cy) in player_grid_occupancy:
-                                                # Player's card is hit
-                                                Chit_card = player_grid_occupancy[(cx, cy)]
-                                                computer_hit_banner_data = (
-                                                Chit_card.text_2, Chit_card.text_1, pygame.time.get_ticks())
-                                                Cscore += int(Chit_card.text_1)
-
-                                                # Remove player's ship from grid and visual list
-                                                del player_grid_occupancy[(cx, cy)]
-                                                if Chit_card in cards:
-                                                    cards.remove(Chit_card)
-
-                                            else:
-                                                # It's a miss
-                                                computer_miss_banner_data = ("MISS", pygame.time.get_ticks())
-
-                                            # Place the red X decision card on the attacked cell
-                                            Ccard = CARD(cx, cy, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30,
-                                                         0, 0, font_2)
-                                            Ccard.x, Ccard.y = cx, cy
-                                            Ccard.card_rect.topleft = (cx, cy)
-                                            cards.append(Ccard)
-
-                                            break
-                                    # computer attack ends
                                 
                     else:
                         snap_to_grid(selected_card, players_grid)#if the released card is a regular unit (not a decision card), it tries to snap to the player's grid using snap_to_grid.
