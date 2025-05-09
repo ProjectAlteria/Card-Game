@@ -300,7 +300,7 @@ def snap_to_grid(card, grid):
     return False #no grid cell matched
 
 def computer_attack():
-    global score, hit_banner_data, miss_banner_data, enemy_score, attacked_cells
+    global score, hit_banner_data, miss_banner_data, computer_score, attacked_cells
 
     all_cells = [(x, y) for x in range(players_grid.x_upper_range, players_grid.x_lower_range, players_grid.size_blocks)
                        for y in range(players_grid.y_upper_range, players_grid.y_lower_range, players_grid.size_blocks)]
@@ -325,7 +325,7 @@ def computer_attack():
 
         hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
         hit_sound.play()  # 5677161 playing the sound
-        enemy_score += points
+        computer_score += points
     else:
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
 # 5656652(end)
