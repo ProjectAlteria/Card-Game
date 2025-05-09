@@ -126,7 +126,7 @@ text_4c = TEXT('4', font_3, BLACK, 1500, 120)
 # Card Class
 class CARD():
     def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y,
-                 font):
+                 font, owner="player"):
         self.x = x
         self.y = y
         self.width = width
