@@ -18,3 +18,20 @@
 The image attached below is our main inspiration and model for the card game called 'Sea Battle'. It is available online at: https://cardgames.io/seabattle/ 
 We have decided to use the model's two screen framwork for the player and the computer and the grid-based system (though ours is smaller). Our main mechanic is moving the cards on the board and cards only occupying single spaces on the grid as opposed to multiple as reflected in image below. 
 ![Screenshot 2025-04-13 214411](https://github.com/user-attachments/assets/ba10a19e-82fd-4791-8b56-f2fbb10a64a9)
+
+
+## Game Features 
+These are screenshots from the gameplay that highlight the specific features implemented. 
+
+The Naval Battle Menu Screen: 
+![Naval Battle Menu Screen](https://github.com/user-attachments/assets/a1d1779e-bfed-4359-99a8-b308ddfb6c6a)
+
+The Rules Page with Back Button:
+![Naval Battle Rules Page](https://github.com/user-attachments/assets/f63c47a2-c4eb-4034-8dbd-a3d38e14003a)
+
+The Game Starts Banner:
+![Game Starts Banner](https://github.com/user-attachments/assets/fc30de2a-c311-4616-ae84-253a83d21757)
+
+The Player Grid Initialisation:
+![Player Grid Initialisation](https://github.com/user-attachments/assets/ccb4ff5e-2203-4795-8379-ae57ce2af9d2)
+
