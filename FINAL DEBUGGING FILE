@@ -453,7 +453,7 @@ def create_decision_cards():
     global decision_cards  # it refers to a variable defined outside the function. This allows the function to modify the global list rather than a local copy
     spacing = 180  # sets the horizontal space between cards
     start_x = int(SCREEN_WIDTH*.2)  # sets the starting x-coordinate for the first card
-    y = int(SCREEN_HEIGHT*.85)  # place inside the green deck
+    y = int(SCREEN_HEIGHT*.83)  # place inside the green deck
     for i in range(6):  # loops allowing to create and add six decision cards
         card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0,
                     font_3)  # card design
@@ -501,7 +501,7 @@ def computer_attack():
     attacked_cells.append(target)
 
     # add a decision card at the attacked cell visually
-    decision_card = CARD(target[0], target[1], CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)
+    decision_card = CARD(target[0], target[1], CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_3)
     decision_cards.append(decision_card)
 
     if target in player_grid_occupancy:
@@ -634,9 +634,9 @@ def set_run_true():
                     shuffled_cards = cards[:12]
                     player_cards = shuffled_cards[:6]
                     computer_cards = shuffled_cards[6:12]
-                    start_x = 320
+                    start_x = int(SCREEN_WIDTH*.2)
                     spacing = 180
-                    shuffle_targets = [(start_x + i * spacing, 900) for i in range(6)]
+                    shuffle_targets = [(start_x + i * spacing, int(SCREEN_HEIGHT*.83)) for i in range(6)]
                     current_step = 0
                     animating = True
                     shuffle_triggered = True
