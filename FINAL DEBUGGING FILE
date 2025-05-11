@@ -567,22 +567,26 @@ def set_run_true():
         if show_initial_shuffle_banner:
             elapsed = pygame.time.get_ticks() - initial_banner_start_time
             if elapsed < 3000 or not initial_shuffle_done:
-                shuffle_banner_font = pygame.font.SysFont('comicsansms', 80)
-                shuffle_text = shuffle_banner_font.render("Press SPACEBAR to shuffle cards", True, WHITE)
-                shuffle_rect = shuffle_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH // 2))
+                message = "Press SPACEBAR to shuffle cards"
 
-                background_rect = shuffle_rect.inflate(100, 50)
-                pygame.draw.rect(screen, RED, background_rect)
-                pygame.draw.rect(screen, WHITE, background_rect, 5)
+                banner_rect = pygame.Rect(100, 300, 1400, 250)
+                pygame.draw.rect(screen, (121, 85, 38), banner_rect)  # Brown background
+                pygame.draw.rect(screen, WHITE, banner_rect, 10)  # White thick border
 
-                screen.blit(shuffle_text, shuffle_rect)
+                banner_text = font_3.render(message, True, (255, 227, 132))  # Yellow text
+                text_rect = banner_text.get_rect(center=banner_rect.center)
+                screen.blit(banner_text, text_rect)
             else:
-                #after 3 seconds, start checking for SPACEBAR
                 if not initial_shuffle_done:
-                    banner_text = font_2.render("Press SPACEBAR to shuffle cards", True, BLACK)
-                    banner_rect = banner_text.get_rect(center=(SCREEN_WIDTH // 2, 50))
-                    pygame.draw.rect(screen, ORANGE, banner_rect.inflate(40, 20))
-                    screen.blit(banner_text, banner_rect)
+                    message = "Press SPACEBAR to shuffle cards"
+
+                    banner_rect = pygame.Rect(100, 300, 1400, 250)
+                    pygame.draw.rect(screen, (121, 85, 38), banner_rect)  # Brown background
+                    pygame.draw.rect(screen, WHITE, banner_rect, 10)  # White thick border
+
+                    banner_text = font_3.render(message, True, (255, 227, 132))  # Yellow text
+                    text_rect = banner_text.get_rect(center=banner_rect.center)
+                    screen.blit(banner_text, text_rect)
 
 
         if hit_banner_data:
