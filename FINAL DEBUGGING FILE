@@ -73,6 +73,7 @@ font_5 = pygame.font.SysFont('arialblack', 50, bold=True)
 font_6 = pygame.font.SysFont('arialblack', 90)
 font_7 = pygame.font.SysFont('arialblack', 30)
 font_8 = pygame.font.SysFont('arialblack', 50)
+font_9 = pygame.font.SysFont('arialblack', 25)
 
 #music
 hit_sound = pygame.mixer.Sound('hit.mp3')
@@ -225,39 +226,28 @@ def rules_page():
         rules_title = TEXT('RULES', font, YELLOW_TEXT, SCREEN_WIDTH * 0.340, SCREEN_HEIGHT * 0.03)
         rules_title.text_objects()
 
-        rule1 = TEXT('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.', font_2,
+        rule1 = TEXT('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.', font_9,
                      WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.32)
-        rule2 = TEXT('2) Cards are used as the main mechanic to interact with the grid.', font_2, WHITE,
+        rule2 = TEXT('2) The two types of cards are decision cards and character cards. ', font_9, WHITE,
                      SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.36)
-        rule3 = TEXT('3) The two types of cards are decision cards and character cards.', font_2, WHITE,
+        rule3 = TEXT('3)The decision cards allow the player to place a bet on where the opponent ship might be on the opponent (right) board ', font_9, WHITE,
                      SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.40)
-        rule4 = TEXT(
-            '4) The decision cards allow the player to place a bet on where the opponent ship might be on the opponent board.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT* 0.44)
-        rule5 = TEXT(
-            '5) The character cards allow the player to place their own arrangement of ships on their side of the board.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.48)
-        rule6 = TEXT(
-            '6) There are 16 decision cards in total (representing the 16 unique locations on the board) but the player is only dealt a hand of 7 cards.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.52)
+        rule4 = TEXT('4)The character cards allow the player to place their own arrangement of ships on the left board.',
+            font_9, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT* 0.44)
+        rule5 = TEXT('5)The game start with the player pressing tab to shuffle and draw six character cards ',
+            font_9, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.48)
+        rule6 = TEXT('6) The player has to then place the 6 cards on the left grid',
+            font_9, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.52)
         rule7 = TEXT(
-            '7) There are 16 character cards that are present for every play through for the player to place on their respective grid.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.56)
+            '7) 6 decision will appear and the player has to place one on the right grid to guess where the opponent ships are',
+            font_9, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.56)
         rule8 = TEXT(
-            '8) When the game starts, the player has to guess where the opponent ships may be on the grid using the decision cards.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.60)
-        rule9 = TEXT('9) The points gained are based on the type of card found by the player.', font_2, WHITE,
+            "8)After placing one decision card, it is the opponent's turn.",
+            font_9, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.60)
+        rule9 = TEXT('9) The are 6 turns that alternate between the player and opponent', font_9, WHITE,
                      SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.64)
-        rule10 = TEXT(
-            '10) The game continues until the player and the opponent (the computer) have used up their 5 decision cards.',
-            font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.68)
-        rule11 = TEXT('11 The game ends and the total number of points collected by each is counted.', font_2, WHITE,
-                      SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.72)
-        rule12 = TEXT('12) The one with the highest number wins.', font_2, WHITE, SCREEN_WIDTH * 0.02,
-                      SCREEN_HEIGHT * 0.76)
-        rule13 = TEXT('13) Let the battle begin!', font_2, WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.80)
 
-        rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13]
+        rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9]
 
         for r in rules:
             r.text_objects()
