@@ -74,6 +74,11 @@ font_6 = pygame.font.SysFont('arialblack', 90)
 font_7 = pygame.font.SysFont('arialblack', 30)
 font_8 = pygame.font.SysFont('arialblack', 50)
 
+#music
+hit_sound = pygame.mixer.Sound('hit.mp3')
+not_hit_sound = pygame.mixer.Sound('not hit.mp3')
+
+
 #Text Class
 class TEXT():
     def __init__(self, text, font, text_color, x, y):
@@ -89,43 +94,26 @@ class TEXT():
 
 
 #Text Instances
-#text_ap = TEXT('A', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.222)
-#text_bp = TEXT('B', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.355)
-#text_cp = TEXT('C', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.490)
-#text_dp = TEXT('D', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.625)
-#text_1p = TEXT('1', font_3, BLACK, SCREEN_WIDTH * .103, SCREEN_HEIGHT * .105)
-#text_2p = TEXT('2', font_3, BLACK, SCREEN_WIDTH * .190, SCREEN_HEIGHT * .105)
-#text_3p = TEXT('3', font_3, BLACK, SCREEN_WIDTH * .276, SCREEN_HEIGHT * .105)
-#text_4p = TEXT('4', font_3, BLACK, SCREEN_WIDTH * .365, SCREEN_HEIGHT * .105)
+text_ap = TEXT('A', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.222)
+text_bp = TEXT('B', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.355)
+text_cp = TEXT('C', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.490)
+text_dp = TEXT('D', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.625)
+text_1p = TEXT('1', font_3, BLACK, SCREEN_WIDTH * .103, SCREEN_HEIGHT * .105)
+text_2p = TEXT('2', font_3, BLACK, SCREEN_WIDTH * .190, SCREEN_HEIGHT * .105)
+text_3p = TEXT('3', font_3, BLACK, SCREEN_WIDTH * .276, SCREEN_HEIGHT * .105)
+text_4p = TEXT('4', font_3, BLACK, SCREEN_WIDTH * .365, SCREEN_HEIGHT * .105)
 
-#text_ac = TEXT('A', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.222)
-#text_bc = TEXT('B', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.355)
-#text_cc = TEXT('C', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.490)
-#text_dc = TEXT('D', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.625)
-#text_1c = TEXT('1', font_3, BLACK, SCREEN_WIDTH * 0.625, SCREEN_HEIGHT * .105)
-#text_2c = TEXT('2', font_3, BLACK, SCREEN_WIDTH * 0.714, SCREEN_HEIGHT * .105)
-#text_3c = TEXT('3', font_3, BLACK, SCREEN_WIDTH * 0.800, SCREEN_HEIGHT * .105)
-#text_4c = TEXT('4', font_3, BLACK, SCREEN_WIDTH * 0.885, SCREEN_HEIGHT * .105)
+text_ac = TEXT('A', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.222)
+text_bc = TEXT('B', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.355)
+text_cc = TEXT('C', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.490)
+text_dc = TEXT('D', font_3, BLACK, SCREEN_WIDTH * 0.550, SCREEN_HEIGHT * 0.625)
+text_1c = TEXT('1', font_3, BLACK, SCREEN_WIDTH * 0.625, SCREEN_HEIGHT * .105)
+text_2c = TEXT('2', font_3, BLACK, SCREEN_WIDTH * 0.714, SCREEN_HEIGHT * .105)
+text_3c = TEXT('3', font_3, BLACK, SCREEN_WIDTH * 0.800, SCREEN_HEIGHT * .105)
+text_4c = TEXT('4', font_3, BLACK, SCREEN_WIDTH * 0.885, SCREEN_HEIGHT * .105)
 
 #game_text = TEXT('GAME STARTS', font_4, WHITE, SCREEN_WIDTH * 0.278, SCREEN_HEIGHT * .453)
 
-text_ap = TEXT('A', font_3, BLACK, 50, 220)
-text_bp = TEXT('B', font_3, BLACK, 50, 375)
-text_cp = TEXT('C', font_3, BLACK, 50, 525)
-text_dp = TEXT('D', font_3, BLACK, 50, 675)
-text_1p = TEXT('1', font_3, BLACK, 165, 120)
-text_2p = TEXT('2', font_3, BLACK, 315, 120)
-text_3p = TEXT('3', font_3, BLACK, 465, 120)
-text_4p = TEXT('4', font_3, BLACK, 615, 120)
-
-text_ac = TEXT('A', font_3, BLACK, 935, 220)
-text_bc = TEXT('B', font_3, BLACK, 935, 375)
-text_cc = TEXT('C', font_3, BLACK, 935, 525)
-text_dc = TEXT('D', font_3, BLACK, 935, 675)
-text_1c = TEXT('1', font_3, BLACK, 1050, 120)
-text_2c = TEXT('2', font_3, BLACK, 1200, 120)
-text_3c = TEXT('3', font_3, BLACK, 1350, 120)
-text_4c = TEXT('4', font_3, BLACK, 1500, 120)
 
 
 class Button:
@@ -306,8 +294,10 @@ class GRID():
                 if square.collidepoint(pos):
                     pygame.draw.rect(screen, (255, 0, 0), square, 4)
 
-players_grid = GRID(150, 115, 715, 200, 800, BLACK)
-computers_grid = GRID(150, 1000, 1600, 200, 800, BLACK)
+players_grid = GRID(CARD_LENGTH, int(SCREEN_WIDTH * .071875), int(SCREEN_WIDTH * .353125), int(SCREEN_HEIGHT * .2), int(SCREEN_HEIGHT * .7),
+                    BLACK)
+computers_grid = GRID(CARD_LENGTH, int(SCREEN_WIDTH * .59375), int(SCREEN_WIDTH * .90625), int(SCREEN_HEIGHT * .2), int(SCREEN_HEIGHT * .7),
+                      BLACK)
 
 grids = [players_grid, computers_grid]
 coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
@@ -361,22 +351,44 @@ class CARD():
 
 
 # Create cards
-CARD(10, 30, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE, 126, 110, 39, 60, font_1)
-CARD(200, 30, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE, 126, 110, 39, 60, font_1)
-CARD(400, 30, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK, 120, 110, 39, 60, font_1)
-CARD(600, 30, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK, 120, 110, 39, 60, font_1)
-CARD(800, 30, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine', WHITE, 120, 110, 18, 60, font_1)
-CARD(1000, 30, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine', WHITE, 110, 110, 18, 60, font_1)
-CARD(1200, 30, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE, 120, 110, 22, 60, font_1)
-CARD(1400, 30, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer', WHITE, 110, 110, 22, 60, font_1)
-CARD(10, 230, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE, 120, 110, 30, 60, font_1)
-CARD(200, 230, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE, 110, 110, 30, 60, font_1)
-CARD(400, 230, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE, 126, 110, 37, 60, font_1)
-CARD(600, 230, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE, 126, 110, 37, 60, font_1)
-CARD(800, 230, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE, 110, 110, 21, 60, font_1)  # One HMS Mary only
-CARD(1000, 230, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5', 'Banana Boat', BLACK, 120, 110, 6, 60, font_1)
-CARD(1200, 230, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13', 'Banana Boat', BLACK, 110, 110, 6, 60, font_1)
-CARD(1400, 230, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_2)  # Decision card
+cruise_3 = CARD(SCREEN_WIDTH * 0.215, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE,
+                CARD_LENGTH * 0.84, CARD_LENGTH * 0.733, CARD_LENGTH * 0.26, CARD_LENGTH * 0.4, font_2)
+cruise_4 = CARD(SCREEN_WIDTH * 0.315, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE,
+                CARD_LENGTH * 0.84, CARD_LENGTH * 0.733, CARD_LENGTH * 0.26, CARD_LENGTH * 0.4, font_2)
+carrier_8 = CARD(SCREEN_WIDTH * 0.415, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, ORANGE, '8', 'Carrier', BLACK,
+                 CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.26, CARD_LENGTH * 0.4, font_2)
+carrier_7 = CARD(SCREEN_WIDTH * 0.515, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, ORANGE, '7', 'Carrier', BLACK,
+                 CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.26, CARD_LENGTH * 0.4, font_2)
+submarine_6 = CARD(SCREEN_WIDTH * 0.615, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '6', 'Submarine',
+                   WHITE, CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.12, CARD_LENGTH * 0.4, font_2)
+submarine_12 = CARD(SCREEN_WIDTH * 0.715, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, DARK_BLUE, '12', 'Submarine',
+                    WHITE, CARD_LENGTH * 0.733, CARD_LENGTH * 0.733, CARD_LENGTH * 0.12, CARD_LENGTH * 0.4, font_2)
+destroyer_4 = CARD(SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '4', 'Destroyer', WHITE,
+                   CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.1467, CARD_LENGTH * 0.4, font_2)
+destroyer_14 = CARD(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, DARK_RED, '14', 'Destroyer',
+                    WHITE, CARD_LENGTH * 0.733, CARD_LENGTH * 0.733, CARD_LENGTH * 0.1467, CARD_LENGTH * 0.4, font_2)
+gunboat_2 = CARD(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '2', 'Gunboat', WHITE,
+                 CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.2, CARD_LENGTH * 0.4, font_2)
+gunboat_12 = CARD(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, CARD_GREEN, '12', 'Gunboat', WHITE,
+                  CARD_LENGTH * 0.733, CARD_LENGTH * 0.733, CARD_LENGTH * 0.2, CARD_LENGTH * 0.4, font_2)
+paladin_5 = CARD(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, PURPLE, '5', 'Paladin', WHITE,
+                 CARD_LENGTH * 0.84, CARD_LENGTH * 0.733, CARD_LENGTH * 0.2467, CARD_LENGTH * 0.4, font_2)
+paladin_7 = CARD(SCREEN_WIDTH * 0.4, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, PURPLE, '7', 'Paladin', WHITE,
+                 CARD_LENGTH * 0.84, CARD_LENGTH * 0.733, CARD_LENGTH * 0.2467, CARD_LENGTH * 0.4, font_2)
+HMS_mary_14 = CARD(SCREEN_WIDTH * 0.3, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, PINK, '14', 'HMS Mary', WHITE,
+                   CARD_LENGTH * 0.733, CARD_LENGTH * 0.733, CARD_LENGTH * 0.14, CARD_LENGTH * 0.4, font_2)
+HMS_mary_1 = CARD(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, PINK, '1', 'HMS Mary', WHITE,
+                  CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.14, CARD_LENGTH * 0.4, font_2)
+banana_boat_5 = CARD(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * .33, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '5',
+                     'Banana Boat', BLACK, CARD_LENGTH * 0.8, CARD_LENGTH * 0.733, CARD_LENGTH * 0.04,
+                     CARD_LENGTH * 0.4, font_2)
+banana_boat_13 = CARD(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * .50, CARD_LENGTH, CARD_LENGTH, BANANA_YELLOW, '13',
+                      'Banana Boat', BLACK, CARD_LENGTH * 0.733, CARD_LENGTH * 0.733, CARD_LENGTH * 0.04,
+                      CARD_LENGTH * 0.4,
+                      font_2)
+decision_card = CARD(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * .50, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED,
+                     CARD_LENGTH * 0.3067, CARD_LENGTH * 0.2, 0, 0, font_3)
+
 
 
 # 5673324
@@ -440,11 +452,11 @@ def place_cards_in_grid(cards, grid, occupancy_dict=None):
 def create_decision_cards():
     global decision_cards  # it refers to a variable defined outside the function. This allows the function to modify the global list rather than a local copy
     spacing = 180  # sets the horizontal space between cards
-    start_x = 320  # sets the starting x-coordinate for the first card
-    y = 860  # place inside the green deck
+    start_x = int(SCREEN_WIDTH*.2)  # sets the starting x-coordinate for the first card
+    y = int(SCREEN_HEIGHT*.85)  # place inside the green deck
     for i in range(6):  # loops allowing to create and add six decision cards
         card = CARD(start_x + i * spacing, y, CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0,
-                    font_2)  # card design
+                    font_3)  # card design
         decision_cards.append(card)  # adds cards to the global decision_cards list
 
 # function to place cards on the grid for player. It ensures that a card "snaps" neatly into the closest grid cell when released with the mouse. It loops over every cell in the player's grid and checks whether the center of the dragged card is inside a specific cell. (5656652)
@@ -500,17 +512,20 @@ def computer_attack():
         cards.remove(target_card)
 
         hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
-        #hit_sound.play()  # 5677161 playing the sound
+        hit_sound.play()  # 5677161 playing the sound
         computer_score += points
     else:
+        not_hit_sound.play()
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
 
 def set_run_true():
     global run, score, hit_banner_data, miss_banner_data, computer_score, player_grid_occupancy, player_cards, decision_cards, decision_cards_displayed, turn, animating, current_step, cards, active_cards, shuffle_targets, shuffle_triggered
     run = True
     while run:
+
         screen.fill(BLUE)
-        pygame.draw.rect(screen, GREEN_DECK, (300, 850, 1100, 250))
+        pygame.draw.rect(screen, GREEN_DECK, (
+            int(SCREEN_WIDTH * .1875), int(SCREEN_HEIGHT * .82), int(SCREEN_WIDTH * 0.650), int(SCREEN_HEIGHT * 0.190)))
 
         for g in grids:
             g.draw()
@@ -518,10 +533,10 @@ def set_run_true():
         for c in coordinates_texts:
             c.text_objects()
 
-        score_display = font_1.render(f"Your score: {score}", True, BLACK)
+        score_display = font_8.render(f"Your score: {score}", True, BLACK)
         screen.blit(score_display, (20, 20))
-        Cscore_display = font_1.render(f"Enemy score: {computer_score}", True, BLACK)
-        # screen.blit(Cscore_display, (WINDOW_WIDTH - Cscore_display.get_width() - 20, 20))
+        Cscore_display = font_8.render(f"Enemy score: {computer_score}", True, BLACK)
+        screen.blit(Cscore_display, (SCREEN_WIDTH - Cscore_display.get_width() - 20, 20))
 
         for c in player_cards:
             c.show()
@@ -539,7 +554,7 @@ def set_run_true():
         if hit_banner_data:
             card_name, points, start_time = hit_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
-                # hit_sound.play()
+                hit_sound.play()
                 banner_rect = pygame.Rect(350, 400, 1000, 150)
                 pygame.draw.rect(screen, (121, 85, 38), banner_rect)
                 pygame.draw.rect(screen, WHITE, banner_rect, 10)
@@ -553,7 +568,7 @@ def set_run_true():
         if miss_banner_data:
             message, start_time = miss_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
-                # not_hit_sound.play()
+                not_hit_sound.play()
                 banner_rect = pygame.Rect(350, 400, 1000, 150)
                 pygame.draw.rect(screen, (121, 85, 38), banner_rect)
                 pygame.draw.rect(screen, WHITE, banner_rect, 10)
