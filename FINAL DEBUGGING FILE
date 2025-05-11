@@ -30,16 +30,16 @@ button_height = SCREEN_HEIGHT * 0.13
 computer_score = 0
 turn = "player"
 score = 0
-computer_grid_occupancy = {}
-hit_banner_data = None
-miss_banner_data = None
+computer_grid_occupancy = {}#dictionary to track computer's cards
+hit_banner_data = None#tuple to store hit info
+miss_banner_data = None#tuple to store miss info
 decision_cards_displayed = False
 cards = []
-decision_cards = []
+decision_cards = []#empty list, which will store decision cards in create_decision_cards function
 player_cards = []
 computer_cards = []
-attacked_cells = []
-player_grid_occupancy = {} # dictionary stores the coordinates of each grid cell currently occupied by a card
+attacked_cells = []#tracks where the computer has already attacked
+player_grid_occupancy = {} #dictionary stores the coordinates of each grid cell currently occupied by a card
 current_step = 0
 computer_turns = 0
 max_turns = 6
@@ -491,38 +491,38 @@ def snap_to_grid(card, grid):
                 return True
     return False  # no grid cell matched
 
-
+#function for computer attacks
 def computer_attack():
-    global score, hit_banner_data, miss_banner_data, computer_score, attacked_cells
-
+    global score, hit_banner_data, miss_banner_data, computer_score, attacked_cells#can be modified inside the function
+    #generates a list of all possible (x, y) coordinate pairs on the player's grid and cover the grid based on the grid's upper/lower range and block size
     all_cells = [(x, y) for x in range(players_grid.x_upper_range, players_grid.x_lower_range, players_grid.size_blocks)
                  for y in range(players_grid.y_upper_range, players_grid.y_lower_range, players_grid.size_blocks)]
     available_cells = [cell for cell in all_cells if cell not in attacked_cells]
 
     if not available_cells:
         return  # all cells attacked
-
+    #randomly selects one cell from the list of all grid cells to attack
     target = random.choice(available_cells)
     attacked_cells.append(target)
 
     # add a decision card at the attacked cell visually
     decision_card = CARD(target[0], target[1], CARD_LENGTH, CARD_LENGTH, BLACK, 'X', '', RED, 46, 30, 0, 0, font_3)
     decision_cards.append(decision_card)
-
+    #checks whether the selected cell contains a player card
     if target in player_grid_occupancy:
-        target_card = player_grid_occupancy[target]
-        points = int(target_card.text_1)
+        target_card = player_grid_occupancy[target]#get the card object at that grid location
+        points = int(target_card.text_1)#extracts the point value from the card
 
-        del player_grid_occupancy[target]
-        cards.remove(target_card)
-
+        del player_grid_occupancy[target]#remove the card from the occupancy map
+        cards.remove(target_card)#also from the master card list to stop drawing it
+        #store data about the hit (name of the card, points, and current time) to be shown in a "hit" banner on screen
         hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
         hit_sound.play()  # 5677161 playing the sound
         computer_score += points
-    else:
+    else:#if the attack missed, prepare a "miss" message to show to the player
         not_hit_sound.play()
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
-
+#function for the final banner
 def display_final_banner():
     global hit_banner_data, miss_banner_data
     winner = "You" if score > computer_score else "Enemy" if computer_score > score else "Draw"
@@ -559,6 +559,7 @@ def set_run_true():
             c.text_objects()
 #5673324 (end)
 #5656652
+#display of scores with counting
         score_display = font_8.render(f"Your score: {score}", True, BLACK)
         screen.blit(score_display, (20, 20))
         Cscore_display = font_8.render(f"Enemy score: {computer_score}", True, BLACK)
@@ -572,6 +573,7 @@ def set_run_true():
             dc.show()
 #5673324(end)
 #5656652
+#display of 6 decision cards at the bottom
         if len(player_grid_occupancy) == 6 and not decision_cards_displayed:
             create_decision_cards()
             decision_cards_displayed = True
@@ -581,6 +583,7 @@ def set_run_true():
             dc.show()
 #5673324(end)
 #5656652
+#banner asking to press spacebar to shuffle the cards
         if show_initial_shuffle_banner:
             elapsed = pygame.time.get_ticks() - initial_banner_start_time
             if elapsed < 3000 or not initial_shuffle_done:
@@ -605,7 +608,7 @@ def set_run_true():
                     text_rect = banner_text.get_rect(center=banner_rect.center)
                     screen.blit(banner_text, text_rect)
 
-
+#banner if it is a hit
         if hit_banner_data:
             card_name, points, start_time = hit_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
@@ -619,7 +622,7 @@ def set_run_true():
                 screen.blit(text_surface, text_rect)
             else:
                 hit_banner_data = None
-
+#banner if it is a miss
         if miss_banner_data:
             message, start_time = miss_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
@@ -633,7 +636,7 @@ def set_run_true():
                 screen.blit(text_surface, text_rect)
             else:
                 miss_banner_data = None
-
+#mechanism to change turns for banners
         if turn == "computer" and not hit_banner_data and not miss_banner_data:
             pygame.time.delay(700)
             computer_attack()
@@ -666,22 +669,25 @@ def set_run_true():
                 if event.button == 1:
                     if active_cards is not None:
                         selected_card = cards[active_cards]
+                        # if it's a decision card(5656652)
                         if selected_card.text_1 == 'X':
-                            for x in range(computers_grid.x_upper_range, computers_grid.x_lower_range, computers_grid.size_blocks):
-                                for y in range(computers_grid.y_upper_range, computers_grid.y_lower_range, computers_grid.size_blocks):
-                                    cell = pygame.Rect(x, y, computers_grid.size_blocks, computers_grid.size_blocks)
-                                    if cell.collidepoint(selected_card.card_rect.center):
-                                        if (x, y) in computer_grid_occupancy:
-                                            hit_card = computer_grid_occupancy[(x, y)]
-                                            hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks())
-                                            score += int(hit_card.text_1)
-                                        else:
-                                            miss_banner_data = ("MISS", pygame.time.get_ticks())
+                            for x in range(computers_grid.x_upper_range, computers_grid.x_lower_range, computers_grid.size_blocks):# begins iterating over the x-coordinates of the computer’s grid, stepping by the size of each grid block
+                                for y in range(computers_grid.y_upper_range, computers_grid.y_lower_range, computers_grid.size_blocks):# iterates over the y-coordinates of the grid, again stepping block by block. Combined with the x-loop, this covers every cell of the computer's grid
+                                    cell = pygame.Rect(x, y, computers_grid.size_blocks, computers_grid.size_blocks)# defines a rectangle (cell) for the current grid cell. Each cell is a square
+                                    if cell.collidepoint(selected_card.card_rect.center): # checks if the center of the released decision card lies within this grid cell. This determines which cell the card was dropped on
+                                        if (x, y) in computer_grid_occupancy: # checks if the grid cell contains an enemy unit (i.e., it’s occupied). computer_grid_occupancy is a dictionary mapping cell coordinates to unit cards
+                                            # if it is a hit
+                                            hit_card = computer_grid_occupancy[(x, y)]# retrieves the card (target) located at that grid cell
+                                            hit_banner_data = (hit_card.text_2, hit_card.text_1, pygame.time.get_ticks()) #stores data related to the hit, including the unit's name (text_2), value or strength (text_1), and the current time. This used for displaying a hit message
+                                            score += int(hit_card.text_1)# increases the player's score based on the value (text_1) of the destroyed unit
+                                        else:# if the cell is empty, it's a miss
+                                            miss_banner_data = ("MISS", pygame.time.get_ticks())# display miss banner
                                         turn = "computer"
+                                        # snap decision card to the grid cell
                                         selected_card.x, selected_card.y = x, y
                                         selected_card.card_rect.topleft = (x, y)
                         else:
-                            snap_to_grid(selected_card, players_grid)
+                            snap_to_grid(selected_card, players_grid) # if the released card is a regular unit (not a decision card), it tries to snap to the player's grid
                         active_cards = None
 
             if event.type == pygame.MOUSEMOTION and active_cards is not None:
