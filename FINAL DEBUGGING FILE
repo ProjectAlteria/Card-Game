@@ -37,6 +37,8 @@ computer_cards = []
 attacked_cells = []
 player_grid_occupancy = {} # dictionary stores the coordinates of each grid cell currently occupied by a card (5656652)
 current_step = 0
+computer_turns = 0
+max_turns = 6
 show_initial_shuffle_banner = True
 initial_banner_start_time = pygame.time.get_ticks()
 initial_shuffle_done = False
@@ -511,8 +513,26 @@ def computer_attack():
         not_hit_sound.play()
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
 
+def display_final_banner():
+    global hit_banner_data, miss_banner_data
+    winner = "You" if score > computer_score else "Enemy" if computer_score > score else "Draw"
+    line1 = "Final Score:"
+    line2 = f"You: {score} | Enemy: {computer_score}"
+    line3 = f"Winner: {winner}"
+    line4 = f"Thank you for playing!"
+    banner_rect = pygame.Rect(250, 360, 1200, 320)
+    pygame.draw.rect(screen, (121, 85, 38), banner_rect)  # Brown background
+    pygame.draw.rect(screen, WHITE, banner_rect, 10)  # White border
+
+    line_spacing = 60
+    lines = [line1, line2, line3, line4]
+    for i, line in enumerate(lines):
+        text_surface = font_3.render(line, True, (255, 227, 132))  # Yellow text
+        text_rect = text_surface.get_rect(center=(banner_rect.centerx, banner_rect.top + 60 + i * line_spacing))
+        screen.blit(text_surface, text_rect)
+
 def set_run_true():
-    global run, score, hit_banner_data, miss_banner_data, computer_score, player_grid_occupancy, player_cards, decision_cards, decision_cards_displayed, turn, animating, current_step, cards, active_cards, shuffle_targets, shuffle_triggered, show_initial_shuffle_banner, initial_shuffle_done
+    global run, score, hit_banner_data, miss_banner_data, computer_score, player_grid_occupancy, player_cards, decision_cards, decision_cards_displayed, turn, animating, current_step, cards, active_cards, shuffle_targets, shuffle_triggered, show_initial_shuffle_banner, initial_shuffle_done, computer_turns
     run = True
     while run:
 
@@ -596,7 +616,10 @@ def set_run_true():
         if turn == "computer" and not hit_banner_data and not miss_banner_data:
             pygame.time.delay(700)
             computer_attack()
+            computer_turns += 1
             turn = "player"
+        if computer_turns >= max_turns:
+            display_final_banner()
 
         if animating and current_step < 20:
             animate_cards(cards, shuffle_targets, current_step)
