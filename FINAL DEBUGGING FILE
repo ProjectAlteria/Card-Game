@@ -3,7 +3,7 @@ import sys
 import random
 from random import randint
 
-#5677161
+#5677161 #initialising pygame
 pygame.init()
 
 # Screen settings
@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 #5677161(end)
 
 # Global state
-#5677161
+#5677161 setting variables
 objects = []
 CARD_LENGTH = int(SCREEN_WIDTH * 0.09375)
 button_width = SCREEN_WIDTH * 0.34
@@ -55,8 +55,7 @@ active_cards = None
 run = False
 #5673324(end)
 
-#5677161
-# Colors
+#5677161 Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (173, 216, 230)
@@ -77,7 +76,7 @@ PINK = (238, 83, 186)
 BANANA_YELLOW = (247, 218, 26)
 GREEN_DECK = (10, 141, 41)
 
-# Fonts
+#Fonts
 font = pygame.font.SysFont('arialblack', 150, bold=True)
 font_1 = pygame.font.SysFont('arialblack', 75)
 font_2 = pygame.font.SysFont('arialblack', 20)
@@ -94,21 +93,21 @@ hit_sound = pygame.mixer.Sound('hit.mp3')
 not_hit_sound = pygame.mixer.Sound('not hit.mp3')
 
 
-#Text Class
+#Text Class creating text class
 class TEXT():
     def __init__(self, text, font, text_color, x, y):
-        self.text = text
-        self.font = font
-        self.text_color = text_color
-        self.x = x
-        self.y = y
+        self.text = text #defining the text to display
+        self.font = font #defining the font
+        self.text_color = text_color #defining the color
+        self.x = x #defining the x coordinate of the text
+        self.y = y #defining the y coordinate of the text
 
     def text_objects(self, center=False):
-        visual = self.font.render(self.text, True, self.text_color)
-        screen.blit(visual, (int(self.x), int(self.y)))
+        visual = self.font.render(self.text, True, self.text_color) #renders the text into a surface object
+        screen.blit(visual, (int(self.x), int(self.y))) #displays the text
 
 
-#Text Instances
+#Coordinates visuals
 text_ap = TEXT('A', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.222)
 text_bp = TEXT('B', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.355)
 text_cp = TEXT('C', font_3, BLACK, SCREEN_WIDTH * 0.03125, SCREEN_HEIGHT * 0.490)
@@ -127,44 +126,45 @@ text_2c = TEXT('2', font_3, BLACK, SCREEN_WIDTH * 0.714, SCREEN_HEIGHT * .105)
 text_3c = TEXT('3', font_3, BLACK, SCREEN_WIDTH * 0.800, SCREEN_HEIGHT * .105)
 text_4c = TEXT('4', font_3, BLACK, SCREEN_WIDTH * 0.885, SCREEN_HEIGHT * .105)
 
-#game_text = TEXT('GAME STARTS', font_4, WHITE, SCREEN_WIDTH * 0.278, SCREEN_HEIGHT * .453)
 
-
-
-class Button:
+class Button: #creating button class
     def __init__(self, x, y, width, height, font_text, color_text, buttonText='Button', onclick=None, onepress=False,
                  normal_color=None):
-        self.x = x
-        self.y = y
+        self.x = x #defining the x coordinate of the button
+        self.y = y #defining the y coordinate of the button
+        #definig the size of the button
         self.width = width
         self.height = height
+        #setting the text inside the button
         self.font_text = font_text
         self.color_text = color_text
+        #estabilish the state of the button
         self.onclick = onclick
         self.onepress = onepress
         self.alreadypressed = False
-
+        #setting the button's colours for the different state
         self.fill_color = {
             'normal': normal_color,
             'on': '#000000',
             'pressed': '#ffffff'
         }
-
+        #displaying the button
         self.button_surface = pygame.Surface((self.width, self.height))
         self.button_rect = pygame.Rect(int(self.x), int(self.y), self.width, self.height)
-
+        #rendering the text inside the button
         self.buttonSurf = self.font_text.render(buttonText, True, self.color_text)
 
         objects.append(self)
 
-    def process(self):
-        mouse = pygame.mouse.get_pos()
-        self.button_surface.fill(self.fill_color['normal'])
+    def process(self):  #making the buttons interactive
+        mouse = pygame.mouse.get_pos() #reading the mouse position
+        self.button_surface.fill(self.fill_color['normal']) #setting the colour of the button when not pressed on
 
         if self.button_rect.collidepoint(mouse):
-            self.button_surface.fill(self.fill_color['on'])
-            if pygame.mouse.get_pressed(num_buttons=3)[0]:
-                self.button_surface.fill(self.fill_color['pressed'])
+            self.button_surface.fill(self.fill_color['on']) #button changes colour when hovered over
+            if pygame.mouse.get_pressed(num_buttons=3)[0]: #checking if the lft click was pressed
+                self.button_surface.fill(self.fill_color['pressed']) #button changes colour when pressed on
+                #making sure the button is pressed only once
                 if self.onepress:
                     if self.onclick: self.onclick()
                 elif not self.alreadypressed:
@@ -177,7 +177,7 @@ class Button:
             self.button_rect.width / 2 - self.buttonSurf.get_rect().width / 2,
             self.button_rect.height / 2 - self.buttonSurf.get_rect().height / 2])
 
-        screen.blit(self.button_surface, self.button_rect)
+        screen.blit(self.button_surface, self.button_rect) #displaying the buttons
 #5677161(end)
 #5673324
 def game_loop():
@@ -190,9 +190,9 @@ def game_loop():
 #5673324(end)
 #5677161
 def game_menu():
-    setup_main_menu_buttons()
-    title = TEXT('Naval Battle', font, YELLOW_TEXT, SCREEN_WIDTH * 0.210, SCREEN_HEIGHT * .080)
-
+    setup_main_menu_buttons() #calls the buttons
+    title = TEXT('Naval Battle', font, YELLOW_TEXT, SCREEN_WIDTH * 0.210, SCREEN_HEIGHT * .080) #displaying name of game
+    #setting the menu screen
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -214,13 +214,13 @@ def game_menu():
 
 
 
-def rules_page():
+def rules_page(): #defining the rules page
     back_buttons = []
 
     def backfunc():
-
+        #creating the back button to go back to the menu page
         for button in back_buttons:
-            if button in objects:
+            if button in objects: #makes sure hte back button doesn't appear in the main menu screen
                 objects.remove(button)
         game_menu()
 
@@ -239,7 +239,7 @@ def rules_page():
                          border_radius=30)
         rules_title = TEXT('RULES', font, YELLOW_TEXT, SCREEN_WIDTH * 0.340, SCREEN_HEIGHT * 0.03)
         rules_title.text_objects()
-
+        #defining the rules
         rule1 = TEXT('1) The game is set on a 4 by 4 grid opening up a sample space of 16 possible positions.', font_9,
                      WHITE, SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.32)
         rule2 = TEXT('2) The two types of cards are decision cards and character cards. ', font_9, WHITE,
@@ -262,10 +262,10 @@ def rules_page():
                      SCREEN_WIDTH * 0.02, SCREEN_HEIGHT * 0.64)
 
         rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9]
-
+        #showing the rules
         for r in rules:
             r.text_objects()
-
+        #showing the back button
         for button in back_buttons:
             button.process()
 
@@ -273,22 +273,23 @@ def rules_page():
         clock.tick(60)
 
 
-# Grid Class
+#  creating grid Class
 class GRID():
     def __init__(self, size_blocks, x_upper_range, x_lower_range, y_upper_range, y_lower_range, color):
-        self.size_blocks = size_blocks
-        self.x_upper_range = x_upper_range
-        self.x_lower_range = x_lower_range
-        self.y_upper_range = y_upper_range
-        self.y_lower_range = y_lower_range
+        self.size_blocks = size_blocks #size squares of the grid
+        self.x_upper_range = x_upper_range #start of the grid x-coordinate
+        self.x_lower_range = x_lower_range #end of the grid x-coordinate
+        self.y_upper_range = y_upper_range #start of the grid y-coordinate
+        self.y_lower_range = y_lower_range #end of the grid y-coordinate
         self.color = color
 
     def draw(self):
-
-        for x in range(self.x_upper_range, self.x_lower_range, self.size_blocks):
+        
+        for x in range(self.x_upper_range, self.x_lower_range, self.size_blocks): 
             for y in range(self.y_upper_range, self.y_lower_range, self.size_blocks):
-                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
+                square = pygame.Rect(x, y, self.size_blocks, self.size_blocks) #drawing squares in the above defined range to obtain a grid
                 pygame.draw.rect(screen, self.color, square, 1)
+#5677161 (end)
 
     # 5673324 mouse clicker interactive method that checks the x and y grid blocks collide with the mouse position and indicates it with red
     def interactive(self, pos):
@@ -296,65 +297,72 @@ class GRID():
             for y in range(self.y_upper_range, self.y_lower_range, self.size_blocks):
                 square = pygame.Rect(x, y, self.size_blocks, self.size_blocks)
                 if square.collidepoint(pos):
-                    pygame.draw.rect(screen, (255, 0, 0), square, 4)
+                    pygame.draw.rect(screen, (255, 0, 0), square, 4) #5673324 (end)
 
+#5677161
+#defining the game's grids
 players_grid = GRID(CARD_LENGTH, int(SCREEN_WIDTH * .071875), int(SCREEN_WIDTH * .353125), int(SCREEN_HEIGHT * .2), int(SCREEN_HEIGHT * .7),
                     BLACK)
 computers_grid = GRID(CARD_LENGTH, int(SCREEN_WIDTH * .59375), int(SCREEN_WIDTH * .90625), int(SCREEN_HEIGHT * .2), int(SCREEN_HEIGHT * .7),
                       BLACK)
 
-grids = [players_grid, computers_grid]
+grids = [players_grid, computers_grid] #grids list 
 coordinates_texts = [text_ap, text_bp, text_cp, text_dp, text_1p, text_2p, text_3p, text_4p, text_ac, text_bc,
-                     text_cc, text_dc, text_1c, text_2c, text_3c, text_4c]
+                     text_cc, text_dc, text_1c, text_2c, text_3c, text_4c] #coordinates list
 
 
-# Card Class
+# creating card class
 class CARD():
     def __init__(self, x, y, width, height, color, text_1, text_2, text_color, text_1_x, text_1_y, text_2_x, text_2_y,
                  font, owner="player"):
-        self.x = x
-        self.y = y
+        self.x = x #card x-coordinate
+        self.y = y #card y-coordinate
+        #card size
         self.width = width
         self.height = height
-        self.color = color
+        self.color = color #card colour
+        #defining card's texts
         self.text_1 = text_1
         self.text_2 = text_2
-        self.text_color = text_color
-        self.text_1_x = text_1_x
-        self.text_1_y = text_1_y
-        self.text_2_x = text_2_x
-        self.text_2_y = text_2_y
-        self.font = font
+        self.text_color = text_color #texts colour
+        self.text_1_x = text_1_x #text1 x-coordinate
+        self.text_1_y = text_1_y #text1 y-coordinate
+        self.text_2_x = text_2_x #text2 x-coordinate
+        self.text_2_y = text_2_y #text2 y-coordinate
+        self.font = font #texts'font
 
-        self.card_surface_1 = pygame.Surface((self.width, self.height))
+        self.card_surface_1 = pygame.Surface((self.width, self.height)) #creating surface for card to display
         self.card_surface_2 = self.card_surface_1.copy()
         self.card_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.cardSurf_1 = self.font.render(text_1, True, self.text_color)
         self.cardSurf_2 = self.font.render(text_2, True, self.text_color)
-        cards.append(self)
+        cards.append(self) #5677161 (end)
+
         # 5656652 division of cards into player's and computers's
         if owner == "player":
             player_cards.append(self)
         elif owner == "computer":
-            computer_cards.append(self)
-
-    def show(self):
+            computer_cards.append(self) #5656652 end
+#5677161
+    def show(self): #showing card
         self.card_surface_1.fill(self.color)
         self.card_surface_2.fill(self.color)
-        self.card_surface_1.blit(self.cardSurf_1, [self.text_1_x, self.text_1_y])
-        self.card_surface_1.blit(self.cardSurf_2, [self.text_2_x, self.text_2_y])
+        self.card_surface_1.blit(self.cardSurf_1, [self.text_1_x, self.text_1_y]) #displays first text on the card
+        self.card_surface_1.blit(self.cardSurf_2, [self.text_2_x, self.text_2_y]) #dispplays second text on the card
         screen.blit(self.card_surface_1, self.card_rect)
         pygame.draw.rect(screen, WHITE, self.card_rect, 5)
+#5677161 (end)
 
+#5656652
     def collidepoint(self, pos):
         return self.card_rect.collidepoint(pos)
 
     def move_ip(self, rel):
         self.card_rect.move_ip(rel)
 
+#5636652 (end)
 
-
-# Create cards
+# 5677161 Create cards
 cruise_3 = CARD(SCREEN_WIDTH * 0.215, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, GREY, '3', 'Cruise', WHITE,
                 CARD_LENGTH * 0.84, CARD_LENGTH * 0.733, CARD_LENGTH * 0.26, CARD_LENGTH * 0.4, font_2)
 cruise_4 = CARD(SCREEN_WIDTH * 0.315, SCREEN_HEIGHT * .85, CARD_LENGTH, CARD_LENGTH, GREY, '4', 'Cruise', WHITE,
@@ -517,10 +525,10 @@ def computer_attack():
         cards.remove(target_card)#also from the master card list to stop drawing it
         #store data about the hit (name of the card, points, and current time) to be shown in a "hit" banner on screen
         hit_banner_data = (target_card.text_2, points, pygame.time.get_ticks())
-        hit_sound.play()  # 5677161 playing the sound
+        hit_sound.play()  # 5677161 playing the music effect
         computer_score += points
     else:#if the attack missed, prepare a "miss" message to show to the player
-        not_hit_sound.play()
+        not_hit_sound.play()  #5677161 playing music effect
         miss_banner_data = ("MISS by enemy!", pygame.time.get_ticks())
 #function for the final banner
 def display_final_banner():
@@ -612,7 +620,7 @@ def set_run_true():
         if hit_banner_data:
             card_name, points, start_time = hit_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
-                hit_sound.play()
+                hit_sound.play() #5677161 playing music effect
                 banner_rect = pygame.Rect(350, 400, 1000, 150)
                 pygame.draw.rect(screen, (121, 85, 38), banner_rect)
                 pygame.draw.rect(screen, WHITE, banner_rect, 10)
@@ -626,7 +634,7 @@ def set_run_true():
         if miss_banner_data:
             message, start_time = miss_banner_data
             if pygame.time.get_ticks() - start_time < 3000:
-                not_hit_sound.play()
+                not_hit_sound.play()  #5677161 playing music effect
                 banner_rect = pygame.Rect(350, 400, 1000, 150)
                 pygame.draw.rect(screen, (121, 85, 38), banner_rect)
                 pygame.draw.rect(screen, WHITE, banner_rect, 10)
@@ -719,7 +727,7 @@ def set_run_true():
         clock.tick(60)
 #5673324 and 5656652 (end)
 #5677161
-def setup_main_menu_buttons():
+def setup_main_menu_buttons(): #calling the buttons
     objects.clear()
     Button(SCREEN_WIDTH * 0.320, SCREEN_HEIGHT * 0.450, button_width, button_height, font_1, WHITE, 'Play',
                lambda: set_run_true()
