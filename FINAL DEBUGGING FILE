@@ -89,7 +89,7 @@ font_8 = pygame.font.SysFont('arialblack', 50)
 font_9 = pygame.font.SysFont('arialblack', 25)
 
 #music
-hit_sound = pygame.mixer.Sound('hit.mp3')
+hit_sound = pygame.mixer.Sound('points.mp3')
 not_hit_sound = pygame.mixer.Sound('not hit.mp3')
 
 
